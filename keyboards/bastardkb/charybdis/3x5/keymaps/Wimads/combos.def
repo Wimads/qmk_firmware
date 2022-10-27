@@ -1,0 +1,26 @@
+COMB(DEF_ESC,      KC_ESC,         KC_Q, KC_W)
+COMB(DEF_CAPS,     KC_CAPS,        KC_R, KC_T, KC_G)
+COMB(DEF_TAB,      KC_TAB,         KC_F, KC_G)
+COMB(DEF_ENT,      KC_ENT,         KC_V, KC_B)
+
+COMB(DEF_WIN,      KC_LGUI,        KC_LALT, KC_SPC)
+COMB(DEF_CA,       C(KC_LALT),     KC_LCTL, DEL_NAV)
+COMB(DEF_CS,       C(KC_LSFT),     KC_LCTL, KC_LSFT)
+COMB(DEF_AS,       A(KC_LSFT),     DEL_NAV, KC_LSFT)
+COMB(DEF_MEH,      KC_MEH,         DEL_NAV, KC_LSFT, KC_LCTL) //CTL+SFT+ALT
+
+COMB(DEFR_TAB,      KC_TAB,         KC_J, KC_H)
+COMB(DEFR_ENT,      KC_ENT,         KC_M, KC_N)
+
+// _NUM
+COMB(NUM_PENT,      KC_PENT,        KC_3, TH_EQL)
+COMB(NUM_TAB,       KC_TAB,         KC_6, KC_PMNS)
+COMB(NUM_0,         KC_0,           KC_1, KC_2)
+COMB(NUM_PDOT,      TH_PDOT,        KC_2, KC_3)
+
+// _MOUSE
+COMB(MSE_3,         M_3,            M_1, M_2)
+
+// Language
+COMB(DEF_LANG,      LANG,           KC_S, KC_D, KC_F)
+COMB(DEF_LANGC,     LANGC,          KC_S, KC_D, KC_F, TH_A)
