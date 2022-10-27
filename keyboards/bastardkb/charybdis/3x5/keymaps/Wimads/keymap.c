@@ -243,7 +243,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
             } return false;
 
         //Mouse buttons
-        /*case M_A1:
+        case M_A1:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_ALT);
                 register_code16(KC_BTN1);
@@ -323,7 +323,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 unregister_code16(KC_BTN2);
                 unregister_mods(MOD_MASK_CSA);
             } return false;
-        */
+
 
         //taphold keys:
         default:
