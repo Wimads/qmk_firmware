@@ -193,6 +193,8 @@ int get_index_taphold(uint16_t keycode_record) { //find corresponding item in ta
     return -1; //return -1 if pressed key is not in taphold map
 };
 
+static uint8_t mouse_tracker; //track mouse button
+
 //macros: taphold, custom combos, custom shift behaviours:
 bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute autswap behaviours
     int index = get_index_taphold(keycode);// check if keycode is in taphold map
@@ -267,6 +269,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_ALT);
             } return false;
         case M_A2:
@@ -275,6 +278,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_ALT);
             } return false;
         case M_AS1:
@@ -283,6 +287,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_SA);
             } return false;
         case M_AS2:
@@ -291,6 +296,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_SA);
             } return false;
         case M_CS1:
@@ -299,6 +305,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_CS);
             } return false;
         case M_CS2:
@@ -307,6 +314,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_CS);
             } return false;
         case M_CA1:
@@ -315,6 +323,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_CA);
             } return false;
         case M_CA2:
@@ -323,6 +332,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_CA);
             } return false;
         case M_MEH1:
@@ -331,6 +341,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_CSA);
             } return false;
         case M_MEH2:
@@ -339,6 +350,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
+                wait_ms(10);
                 unregister_mods(MOD_MASK_CSA);
             } return false;
 
@@ -365,3 +377,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
     }//end of switch(keycode)
     return true; //if key is not in taphold map, return original key behaviour
 };
+
