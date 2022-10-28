@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+//!!! qmk develop branch
 #include QMK_KEYBOARD_H
 
 /*********KEYMAPS*******/
@@ -40,14 +42,16 @@ enum charybdis_keymap_layers {
     _DEF = 0, //default
     _NUM = 1, //numbers and symbols
     _NAV = 2, //navigation and mouse keys
-    _FN = 3,  //function keys
-    _S = 4 //settings
+    _FUN = 3,  //function keys
+    _SET = 4 //settings
 };
 
 //Custom Keycodes
 enum custom_keycodes {
     //Switch windows keyboard language
     LANGC = CHARYBDIS_SAFE_RANGE, //correction for language tracker
+    CLEARKB, //clears all registered keycodes, to solve stuck keycodes/layers/modifiers
+    //modified mouse buttons
     M_A1, M_A2,
     M_AS1, M_AS2,
     M_CS1, M_CS2,
@@ -65,6 +69,7 @@ enum custom_keycodes {
 #define TH_EQL LT(10, KC_EQL)
 #define DEL_NAV LT(_NAV, KC_DEL)
 #define BSP_NUM LT(_NUM, KC_BSPC)
+#define SPC_SET LT(_SET, KC_SPC)
 //mouse buttons
 #define M_1 KC_BTN1
 #define M_2 KC_BTN2
@@ -96,35 +101,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
       KC_CIRC, KC_1,    KC_2,    KC_3,    TH_EQL,                       KC_PIPE, KC_AMPR, KC_LT,   KC_GT,   KC_BSLS,
   // ╰─────────────────────────────────────────────────────╮  ╭─────────────────────────────────────────────────────╯
-             KC_0,    TH_PDOT,   KC_RALT, KC_RSFT, KC_RCTL,    DRG_TOG, MO(_FN), _______   //trackball = scroll
+             KC_0,    TH_PDOT,   KC_RALT, KC_RSFT, KC_RCTL,    KC_SCRL, MO(_FUN), _______   //trackball = scroll
   //        ╰─────────────────╯ ╰──────────────────────────╯  ╰──────────────────────────╯
   ),
 
   [_NAV] = LAYOUT(
   // ╭────────────────────────────────────────────╮                   ╭─────────────────────────────────────────────╮
-      M_MEH1,  M_CA1,   M_CA2,   M_MEH2,  XXXXXXX,                      KC_PGUP, KC_HOME, KC_UP,   KC_END,  XXXXXXX,
+      M_MEH1,  M_CA1,   M_CA2,   M_MEH2,  XXXXXXX,                      KC_PGUP, KC_HOME, KC_UP,   KC_END,  KC_PSCR,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
-      DRGSCRL, M_CS1,   M_CS2,   XXXXXXX, XXXXXXX,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX,
+      KC_CAPS, M_CS1,   M_CS2,   DRG_TOG, DRGSCRL,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_INS,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
-      M_4,     M_AS1,   M_AS2,   M_5,     SNIPING,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      M_4,     M_AS1,   M_AS2,   M_5,     SNIPING,                      KC_NUM,  KC_MENU, XXXXXXX, KC_BRK, XXXXXXX,
   // ╰─────────────────────────────────────────────────────╮  ╭─────────────────────────────────────────────────────╯
-               M_A1,    M_A2,    _______, MO(_S),  KC_LCTL,    KC_LALT, KC_AT,   XXXXXXX   //trackball = mouse
+               M_A1,    M_A2,    _______, SPC_SET, CLEARKB,    KC_LCTL, KC_LSFT, DRG_TOG   //trackball = mouse
   //        ╰─────────────────╯ ╰──────────────────────────╯  ╰──────────────────────────╯
   ),
 
-  [_FN] = LAYOUT(
+  [_FUN] = LAYOUT(
   // ╭────────────────────────────────────────────╮                   ╭─────────────────────────────────────────────╮
-      XXXXXXX, KC_F7,   KC_F8,   KC_F9,   XXXXXXX,                      KC_CAPS, XXXXXXX, KC_INS,  XXXXXXX, KC_PSCR,
+      XXXXXXX, KC_F7,   KC_F8,   KC_F9,   XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
-      XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX,                      KC_SCRL, XXXXXXX, XXXXXXX, XXXXXXX, KC_BRK,
+      XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
-      XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX,                      KC_NUM,  KC_MENU, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   // ╰─────────────────────────────────────────────────────╮  ╭─────────────────────────────────────────────────────╯
              KC_F10,   KC_F11,   KC_F12,  XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX   //trackball = scroll
   //        ╰─────────────────╯ ╰──────────────────────────╯  ╰──────────────────────────╯
   ),
 
-  [_S] = LAYOUT(
+  [_SET] = LAYOUT(
   // ╭────────────────────────────────────────────╮                   ╭─────────────────────────────────────────────╮
       XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
@@ -138,15 +143,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-
 /*********CUSTOM KEY BEHAVIOURS********/
 //tap-hold configurations:
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case DEL_NAV:   return true;
         case BSP_NUM:   return true;
-        case MO(_FN):   return true;
-        case MO(_S):    return true;
+        case MO(_FUN):  return true;
+        case SPC_SET:   return true;
         default:        return false; // disable permissive hold for TH keys
     }
 };
@@ -154,8 +158,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case DEL_NAV:   return TAPPING_TERM;
         case BSP_NUM:   return TAPPING_TERM;
-        case MO(_FN):   return TAPPING_TERM;
-        case MO(_S):    return TAPPING_TERM;
+        case MO(_FUN):  return TAPPING_TERM;
+        case SPC_SET:   return TAPPING_TERM;
         default:        return 225; // set tapping term for TH keys
     }
 };
@@ -163,8 +167,8 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case DEL_NAV:   return false;
         case BSP_NUM:   return false;
-        case MO(_FN):  return  false;
-        case MO(_S):    return false;
+        case MO(_FUN):  return false;
+        case SPC_SET:   return false;
         default:        return true; // enable tapping force hold for TH keys
     }
 };
@@ -193,14 +197,18 @@ int get_index_taphold(uint16_t keycode_record) { //find corresponding item in ta
     return -1; //return -1 if pressed key is not in taphold map
 };
 
-static uint8_t mouse_tracker; //track mouse button
-
 //macros: taphold, custom combos, custom shift behaviours:
 bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute autswap behaviours
     int index = get_index_taphold(keycode);// check if keycode is in taphold map
     const uint16_t mod_shift = get_mods() & MOD_MASK_SHIFT; //track shift state for custom shift behaviours
     static bool language_EN = true; // track windows keyboard language, default is English (US), may require manual correction on startup
     switch(keycode) {
+        case CLEARKB:
+            if (record->event.pressed) {
+                clear_keyboard(); //clears all keys and modifiers that might be stuck
+                layer_clear(); //clears all layers that might be stuck
+            } return false;
+
         //custom shift behaviours:
         case KC_COMM:
             if (record->event.pressed && mod_shift) {
@@ -209,7 +217,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_mods(mod_shift);
                 return false;
             } return true;
-
         case KC_DOT:
             if (record->event.pressed && mod_shift) {
                 unregister_mods(mod_shift);
@@ -217,7 +224,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_mods(mod_shift);
                 return false;
             } return true;
-
         case KC_EXLM:
             if (record->event.pressed && mod_shift) {
                 unregister_mods(mod_shift);
@@ -225,7 +231,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_mods(mod_shift);
                 return false;
             } return true;
-
         case DEL_NAV:
             if (record->event.pressed && record->tap.count && mod_shift){
                 unregister_mods(mod_shift);
@@ -233,24 +238,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_mods(mod_shift);
                 return false;
             } return true;
-
         case BSP_NUM:
-            if (record->event.pressed && record->tap.count) { //when tapped
-                if (mod_shift){
-                    unregister_mods(mod_shift);
-                    tap_code16(KC_BSPC);
-                    register_mods(mod_shift);
-                    return false;
-                } else {
-                    return true;
-                }
-            } else if (record->event.pressed){ //when held
+            if (record->event.pressed && record->tap.count && mod_shift) { //when tapped
+                unregister_mods(mod_shift);
+                tap_code16(KC_BSPC);
+                register_mods(mod_shift);
+                return false;
+            } else if (record->event.pressed) {
                 charybdis_set_pointer_dragscroll_enabled(true);
-                return true;
-            } else { //on release
+            } else {
                 charybdis_set_pointer_dragscroll_enabled(false);
-                return true;
-            }
+            } return true;
 
         //Language tracker
         case LANG:
@@ -353,7 +351,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 wait_ms(10);
                 unregister_mods(MOD_MASK_CSA);
             } return false;
-
 
         //taphold keys:
         default:
