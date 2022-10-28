@@ -17,6 +17,24 @@
 #include QMK_KEYBOARD_H
 
 /*********KEYMAPS*******/
+
+#define LAYOUT(                                          \
+  k00, k01, k02, k03, k04,      k44, k43, k42, k41, k40, \
+  k10, k11, k12, k13, k14,      k54, k53, k52, k51, k50, \
+  k20, k21, k22, k23, k24,      k64, k63, k62, k61, k60, \
+  k34, k31, k32, k33, k30,      k70, k73, k72            \
+)                                                        \
+{                                                        \
+  {   k00,   k01,   k02,   k03,   k04 },                 \
+  {   k10,   k11,   k12,   k13,   k14 },                 \
+  {   k20,   k21,   k22,   k23,   k24 },                 \
+  {   k30,   k31,   k32,   k33,   k34 },                 \
+  {   k40,   k41,   k42,   k43,   k44 },                 \
+  {   k50,   k51,   k52,   k53,   k54 },                 \
+  {   k60,   k61,   k62,   k63,   k64 },                 \
+  {   k70, KC_NO,   k72,   k73, KC_NO },                 \
+}
+
 //layers
 enum charybdis_keymap_layers {
     _DEF = 0, //default
@@ -100,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
       XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX,                      KC_SCRL, XXXXXXX, XXXXXXX, XXXXXXX, KC_BRK,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
-      XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX,                      KC_NLCK, KC_MENU, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX,                      KC_NUM,  KC_MENU, XXXXXXX, XXXXXXX, XXXXXXX,
   // ╰─────────────────────────────────────────────────────╮  ╭─────────────────────────────────────────────────────╯
              KC_F10,   KC_F11,   KC_F12,  XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX   //trackball = scroll
   //        ╰─────────────────╯ ╰──────────────────────────╯  ╰──────────────────────────╯
