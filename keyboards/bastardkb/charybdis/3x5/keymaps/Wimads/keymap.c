@@ -263,103 +263,115 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         //Mouse buttons
         case M_A1:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_ALT);
+                register_code16(KC_RALT);
                 wait_ms(10);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_ALT);
+                unregister_code16(KC_RALT);
             } return false;
         case M_A2:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_ALT);
+                register_code16(KC_RALT);
                 wait_ms(10);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_ALT);
+                unregister_code16(KC_RALT);
             } return false;
         case M_AS1:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_SA);
-                wait_ms(10);
+                register_code16(KC_RALT);
+                register_code16(KC_LSFT);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_SA);
+                unregister_code16(KC_RALT);
+                unregister_code16(KC_LSFT);
             } return false;
         case M_AS2:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_SA);
-                wait_ms(10);
+                register_code16(KC_RALT);
+                register_code16(KC_LSFT);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_SA);
+                unregister_code16(KC_RALT);
+                unregister_code16(KC_LSFT);
             } return false;
         case M_CS1:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_CS);
-                wait_ms(10);
+                register_code16(KC_LCTL);
+                register_code16(KC_LSFT);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_CS);
+                unregister_code16(KC_LCTL);
+                unregister_code16(KC_LSFT);
             } return false;
         case M_CS2:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_CS);
-                wait_ms(10);
+                register_code16(KC_LCTL);
+                register_code16(KC_LSFT);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_CS);
+                unregister_code16(KC_LCTL);
+                unregister_code16(KC_LSFT);
             } return false;
         case M_CA1:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_CA);
-                wait_ms(10);
+                register_code16(KC_LCTL);
+                register_code16(KC_RALT);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_CA);
+                unregister_code16(KC_LCTL);
+                unregister_code16(KC_RALT);
             } return false;
         case M_CA2:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_CA);
-                wait_ms(10);
+                register_code16(KC_LCTL);
+                register_code16(KC_RALT);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_CA);
+                unregister_code16(KC_LCTL);
+                unregister_code16(KC_RALT);
             } return false;
         case M_MEH1:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_CSA);
-                wait_ms(10);
+                register_code16(KC_LCTL);
+                register_code16(KC_RALT);
+                register_code16(KC_LSFT);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_CSA);
+               unregister_code16(KC_LCTL);
+               unregister_code16(KC_RALT);
+               unregister_code16(KC_LSFT);
             } return false;
         case M_MEH2:
             if (record->event.pressed) {
-                register_mods(MOD_MASK_CSA);
-                wait_ms(10);
+                register_code16(KC_LCTL);
+                register_code16(KC_RALT);
+                register_code16(KC_LSFT);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
                 wait_ms(10);
-                unregister_mods(MOD_MASK_CSA);
+                unregister_code16(KC_LCTL);
+                unregister_code16(KC_RALT);
+                unregister_code16(KC_LSFT);;
             } return false;
 
         //taphold keys:
