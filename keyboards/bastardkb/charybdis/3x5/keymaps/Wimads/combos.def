@@ -1,24 +1,34 @@
 COMB(DEF_ESC,       KC_ESC,         KC_Q, KC_W)
-COMB(DEF_CAPS,      KC_CAPS,        KC_R, KC_T, KC_G)
 COMB(DEF_TAB,       KC_TAB,         KC_F, KC_G)
 COMB(DEF_ENT,       KC_ENT,         KC_V, KC_B)
-
-COMB(DEF_WIN,       KC_LGUI,        BSP_NUM, KC_SPC)
-COMB(DEF_RALT,      KC_RALT,        KC_SPC, KC_LALT)
-COMB(DEF_CA,        C(KC_LALT),     KC_LCTL, DEL_NAV)
-COMB(DEF_CS,        C(KC_LSFT),     KC_LCTL, KC_LSFT)
-COMB(DEF_AS,        A(KC_LSFT),     DEL_NAV, KC_LSFT)
-COMB(DEF_MEH,       KC_MEH,         DEL_NAV, KC_LSFT, KC_LCTL) //CTL+SFT+ALT
-
 COMB(DEFR_TAB,      KC_TAB,         KC_J, KC_H)
 COMB(DEFR_ENT,      KC_ENT,         KC_M, KC_N)
 
-// _NUM
+// Modifiers
+COMB(DEF_WIN,       KC_LGUI,        BSP_NUM, KC_SPC)           // Thumbs R: _ x x
+COMB(DEF_RALT,      KC_RALT,        KC_SPC, KC_LALT)           // Thumbs R: x x _
+
+COMB(DEF_CA,        C(KC_LALT),     KC_LCTL, DEL_NAV)          // Thumbs L: x _ x
+COMB(DEF_CS,        C(KC_LSFT),     KC_LCTL, KC_LSFT)          // Thumbs L: _ x x || Thumbs R _NAV: x x _
+COMB(DEF_AS,        A(KC_LSFT),     DEL_NAV, KC_LSFT)          // Thumbs L: x x _
+
+COMB(DEF_MEH,       KC_MEH,         BSP_NUM, KC_LALT)          // Thumbs R: x _ x
+COMB(DEF_HYP,       KC_HYPR,        BSP_NUM, KC_SPC, KC_LALT)  // Thumbs R: x x x
+
+// Numpad
 COMB(NUM_PENT,      KC_PENT,        KC_3, TH_EQL)
 COMB(NUM_TAB,       KC_TAB,         KC_6, KC_PMNS)
 
-// _MOUSE
-COMB(MSE_3,         M_3,            M_1, M_2)
+// Mouse
+COMB(NAV_M_3,       M_3,            M_1, M_2)
+COMB(DEF_SCRL,      DRGSCRL,        KC_X, KC_C)
+COMB(NAV_SCRL,      DRG_TOG,        M_AS1, M_AS2)
+
+COMB(DEF_M_1,       M_1,            KC_COMM, KC_DOT)
+COMB(DEF_M_3,       M_3,            KC_COMM, KC_DOT, KC_EXLM)
+COMB(DEF_M_2,       M_2,            KC_DOT, KC_EXLM)
+COMB(NUM_M_4,       M_4,            KC_CAPS, KC_BRK)
+COMB(NUM_M_5,       M_5,            KC_BRK, KC_SCRL)
 
 // Language
 COMB(DEF_LANG,      LANG,           KC_S, KC_D, KC_F)

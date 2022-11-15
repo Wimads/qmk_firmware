@@ -101,7 +101,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
       KC_CIRC, KC_1,    KC_2,    KC_3,    TH_EQL,                       KC_PIPE, KC_AMPR, KC_LT,   KC_GT,   KC_BSLS,
   // ╰─────────────────────────────────────────────────────╮  ╭─────────────────────────────────────────────────────╯
-             KC_0,    TH_PDOT,   KC_RALT, KC_RSFT, KC_RCTL,    KC_SCRL, MO(_FUN), _______   //trackball = scroll
+             KC_0,    TH_PDOT,   KC_RALT, KC_RSFT, KC_RCTL,    KC_LALT, MO(_FUN), _______   //trackball = scroll
   //        ╰─────────────────╯ ╰──────────────────────────╯  ╰──────────────────────────╯
   ),
 
@@ -109,9 +109,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ╭────────────────────────────────────────────╮                   ╭─────────────────────────────────────────────╮
       M_MEH1,  M_CA1,   M_CA2,   M_MEH2,  XXXXXXX,                      KC_PGUP, KC_HOME, KC_UP,   KC_END,  KC_PSCR,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
-      KC_CAPS, M_CS1,   M_CS2,   DRG_TOG, DRGSCRL,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_INS,
+      XXXXXXX, M_CS1,   M_CS2,   XXXXXXX, XXXXXXX,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_INS,
   // ├────────────────────────────────────────────┤                   ├─────────────────────────────────────────────┤
-      M_4,     M_AS1,   M_AS2,   M_5,     SNIPING,                      KC_NUM,  KC_MENU, XXXXXXX, KC_BRK, XXXXXXX,
+      M_4,     M_AS1,   M_AS2,   M_5,     SNIPING,                      KC_NUM,  KC_MENU, KC_CAPS, KC_BRK,  KC_SCRL,
   // ╰─────────────────────────────────────────────────────╮  ╭─────────────────────────────────────────────────────╯
                M_A1,    M_A2,    _______, SPC_SET, CLEARKB,    KC_LCTL, KC_LSFT, DRG_TOG   //trackball = mouse
   //        ╰─────────────────╯ ╰──────────────────────────╯  ╰──────────────────────────╯
@@ -211,12 +211,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
 
         //custom shift behaviours:
         case KC_COMM:
-            if (record->event.pressed && mod_shift) {
+            if (record->event.pressed && mod_shift) { //override when shifted
                 unregister_mods(mod_shift);
                 tap_code16(KC_SCLN);
                 register_mods(mod_shift);
                 return false;
-            } return true;
+            } return true; //else don't override
         case KC_DOT:
             if (record->event.pressed && mod_shift) {
                 unregister_mods(mod_shift);
@@ -232,14 +232,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 return false;
             } return true;
         case DEL_NAV:
-            if (record->event.pressed && record->tap.count && mod_shift){
+            if (record->event.pressed && record->tap.count && mod_shift){ //override when tapped and shifted
                 unregister_mods(mod_shift);
                 tap_code16(KC_BSPC);
                 register_mods(mod_shift);
                 return false;
-            } return true;
+            } return true; //else don't override
         case BSP_NUM:
-            if (record->event.pressed && record->tap.count && mod_shift) { //when tapped
+            if (record->event.pressed && record->tap.count && mod_shift) {
                 unregister_mods(mod_shift);
                 tap_code16(KC_BSPC);
                 register_mods(mod_shift);
@@ -264,6 +264,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_A1:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_ALT);
+                wait_ms(10);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
@@ -273,6 +274,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_A2:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_ALT);
+                wait_ms(10);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
@@ -282,6 +284,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_AS1:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_SA);
+                wait_ms(10);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
@@ -291,6 +294,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_AS2:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_SA);
+                wait_ms(10);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
@@ -300,6 +304,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_CS1:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_CS);
+                wait_ms(10);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
@@ -309,6 +314,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_CS2:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_CS);
+                wait_ms(10);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
@@ -318,6 +324,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_CA1:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_CA);
+                wait_ms(10);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
@@ -327,6 +334,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_CA2:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_CA);
+                wait_ms(10);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);
@@ -336,6 +344,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_MEH1:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_CSA);
+                wait_ms(10);
                 register_code16(KC_BTN1);
             } else {
                 unregister_code16(KC_BTN1);
@@ -345,6 +354,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
         case M_MEH2:
             if (record->event.pressed) {
                 register_mods(MOD_MASK_CSA);
+                wait_ms(10);
                 register_code16(KC_BTN2);
             } else {
                 unregister_code16(KC_BTN2);

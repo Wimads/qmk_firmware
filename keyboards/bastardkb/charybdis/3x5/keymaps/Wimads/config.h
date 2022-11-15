@@ -16,12 +16,12 @@
  */
 #pragma once
 
-/*** Keymap features ***/
+/*** Keymap configurations ***/
 /* Tap Hold configuration */
 #define IGNORE_MOD_TAP_INTERRUPT
 #define PERMISSIVE_HOLD_PER_KEY
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
-#define TAPPING_TERM 165
+#define TAPPING_TERM 185
 #define TAPPING_TERM_PER_KEY
 #define TAPPING_FORCE_HOLD_PER_KEY
 
@@ -32,6 +32,7 @@
 /* Capsword */
 #define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
 
+/*** Hardware configurations ***/
 /* Trackball configuration */
 //undefine charybdis default configuration
 #undef ROTATIONAL_TRANSFORM_ANGLE
