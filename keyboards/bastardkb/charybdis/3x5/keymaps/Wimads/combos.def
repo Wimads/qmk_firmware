@@ -5,31 +5,30 @@ COMB(DEFR_TAB,      KC_TAB,         KC_J, KC_H)
 COMB(DEFR_ENT,      KC_ENT,         KC_M, KC_N)
 
 // Modifiers
-COMB(DEF_WIN,       KC_LGUI,        BSP_NUM, KC_SPC)           // Thumbs R: _ x x
-COMB(DEF_RALT,      KC_RALT,        KC_SPC, KC_LALT)           // Thumbs R: x x _
+COMB(DEF_WIN,       KC_LGUI,        DEL_NAV, KC_SPC)           // Thumbs R: _ x x
+COMB(DEF_RALT,      KC_RALT,        KC_SPC, BSP_NUM)           // Thumbs R: x x _
+COMB(DEF_SET,       MO(_SET),       DEL_NAV, BSP_NUM)          // Thumbs R: x _ x
 
-COMB(DEF_CA,        C(KC_LALT),     KC_LCTL, DEL_NAV)          // Thumbs L: x _ x
-COMB(DEF_CS,        C(KC_LSFT),     KC_LCTL, KC_LSFT)          // Thumbs L: _ x x || Thumbs R _NAV: x x _
-COMB(DEF_AS,        A(KC_LSFT),     DEL_NAV, KC_LSFT)          // Thumbs L: x x _
-
-COMB(DEF_MEH,       KC_MEH,         BSP_NUM, KC_LALT)          // Thumbs R: x _ x
-COMB(DEF_HYP,       KC_HYPR,        BSP_NUM, KC_SPC, KC_LALT)  // Thumbs R: x x x
+COMB(DEF_CA,        C(KC_LALT),     KC_LCTL, KC_LALT)          // Thumbs L: x _ x
+COMB(DEF_CS,        C(KC_LSFT),     KC_LCTL, KC_LSFT)          // Thumbs L: _ x x
+COMB(NUM_CS,        C(KC_LSFT),     KC_LCTL, CAP_SFT)
+COMB(DEF_AS,        A(KC_LSFT),     KC_LALT, KC_LSFT)          // Thumbs L: x x _
+COMB(NUM_AS,        A(KC_LSFT),     KC_LALT, CAP_SFT)
+COMB(DEF_MEH,       KC_MEH,         KC_LCTL, KC_LSFT, KC_LALT) // Thumbs L: x x x
+COMB(NUM_MEH,       KC_MEH,         KC_LCTL, CAP_SFT, KC_LALT)
 
 // Numpad
 COMB(NUM_PENT,      KC_PENT,        KC_3, TH_EQL)
-COMB(NUM_TAB,       KC_TAB,         KC_6, KC_PMNS)
+COMB(NUM_TAB,       KC_TAB,         KC_6, KC_MINS)
 
 // Mouse
-COMB(NAV_M_3,       M_3,            M_1, M_2)
+COMB(NAV_M_3,       KC_BTN3,        KC_BTN1, KC_BTN2)
 COMB(DEF_SCRL,      DRGSCRL,        KC_X, KC_C)
-COMB(NAV_SCRL,      DRG_TOG,        M_AS1, M_AS2)
 
-COMB(DEF_M_1,       M_1,            KC_COMM, KC_DOT)
-COMB(DEF_M_3,       M_3,            KC_COMM, KC_DOT, KC_EXLM)
-COMB(DEF_M_2,       M_2,            KC_DOT, KC_EXLM)
-COMB(NUM_M_4,       M_4,            KC_CAPS, KC_BRK)
-COMB(NUM_M_5,       M_5,            KC_BRK, KC_SCRL)
+COMB(DEF_M_1,       KC_BTN1,        KC_COMM, KC_DOT)
+COMB(DEF_M_3,       KC_BTN3,        KC_COMM, KC_DOT, KC_EXLM)
+COMB(DEF_M_2,       KC_BTN2,        KC_DOT, KC_EXLM)
 
 // Language
-COMB(DEF_LANG,      LANG,           KC_S, KC_D, KC_F)
-COMB(DEF_LANGC,     LANGC,          KC_S, KC_D, KC_F, TH_A)
+COMB(DEF_LANG,      LANG,           TH_S, TH_D, KC_F)
+COMB(DEF_LANGC,     LANGC,          TH_S, TH_D, KC_F, TH_A)
