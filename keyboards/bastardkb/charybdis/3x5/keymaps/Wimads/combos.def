@@ -23,7 +23,7 @@ COMB(NUM_TAB,       KC_TAB,         KC_6, KC_MINS)
 
 // Mouse
 COMB(NAV_M_3,       KC_BTN3,        KC_BTN1, KC_BTN2)
-COMB(DEF_SCRL,      DRGSCRL,        KC_X, KC_C)
+COMB(DEF_ZOOM,      ZOOM,           KC_X, KC_C)
 
 COMB(DEF_M_1,       KC_BTN1,        KC_COMM, KC_DOT)
 COMB(DEF_M_3,       KC_BTN3,        KC_COMM, KC_DOT, KC_EXLM)

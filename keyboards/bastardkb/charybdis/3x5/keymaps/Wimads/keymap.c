@@ -49,7 +49,8 @@ enum charybdis_keymap_layers {
 enum custom_keycodes {
     //Switch windows keyboard language
     LANGC = CHARYBDIS_SAFE_RANGE, //correction for language tracker
-    CLEARKB //clears all registered keycodes, to solve stuck keycodes/layers/modifiers
+    CLEARKB, //clears all registered keycodes, to solve stuck keycodes/layers/modifiers
+    ZOOM //ctrl + drgscrl
 };
 //language key
 #define LANG LGUI(KC_SPC)
@@ -215,6 +216,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) { //execute auts
                 register_mods(mod_shift);
                 return false;
             } return true;
+
+        case ZOOM:
+            if (record->event.pressed) {
+                register_code16(KC_LCTL);
+                wait_ms(10);
+                charybdis_set_pointer_dragscroll_enabled(true);
+            } else {
+                charybdis_set_pointer_dragscroll_enabled(false);
+                wait_ms(10);
+                unregister_code16(KC_LCTL);
+            } return false;
 
         //trackball sniping scrolling:
         case DEL_NAV:
