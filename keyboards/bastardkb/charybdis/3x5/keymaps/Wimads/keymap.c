@@ -23,27 +23,28 @@ enum charybdis_keymap_layers {
 enum custom_keycodes {
     CLEARKB = SAFE_RANGE, // clears all keys and/or layers that might be stuck
     DRGZOOM,              // ctrl + drgscrl (defined in macro, since C(DRGSCRL) doesn't work)
-    SNIPE,
 };
 
 // Custom keycodes:
-#define DRGcTOG DRG_TOG // DRG_TOG for combos (for some reason DRG_TOG keycode doesn't work in combos.def)
-#define DRGcSCR DRGSCRL
 #define DOTCOMM LT(10, KC_DOT) // KC_DOT, KC_COMM on shif; swap behavoiur by double tap (further defined in macro)
 #define BSP_NUM LT(_NUM, KC_BSPC)
 #define SPC_SFT LSFT_T(KC_SPC)
-// Dead-hold keys (normal on tap, dead key on hold, further defined in macro)
-#define DH_QUOT LT(11, KC_QUOT)
-#define DH_GRV LT(11, KC_GRV)
-#define DH_TILD LT(12, KC_TILD)
-#define DH_CIRC LT(12, KC_CIRC)
+// Dead-hold keys: normal on tap, dead key on hold; requires "English(US)"+"Qwerty US" language+kbd settings in windows
+#define DH_QUOT LT(11, KC_QUOT) // further defined in macro
+#define DH_GRV LT(11, KC_GRV)   // further defined in macro
+#define DH_TILD LT(12, KC_TILD) // further defined in macro
+#define DH_CIRC LT(12, KC_CIRC) // further defined in macro
+// Keycodes for combos.def (workaround for charybdis keycodes)
+#define DRGcTOG DRG_TOG
+#define DRGcSCR DRGSCRL
+#define SNIcPIN SNIPING
 
 #include "g/keymap_combo.h" //include combo dictionary after custom keycodes, so custom keycodes can be used in combos.def
 
 // Keymaps:
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_QAI] = LAYOUT_Wimads(                                                                                                                                                                                                                                                              // default layer
-        SNIPE, KC_BTN2, DRGcSCR, KC_BTN1, XXXXXXX, XXXXXXX, KC_BTN1, DRGcSCR, KC_BTN2, DRGSCRL, KC_R, KC_O, KC_I, KC_T, XXXXXXX, XXXXXXX, KC_T, KC_I, KC_O, KC_R, KC_A, KC_S, KC_E, KC_N, XXXXXXX, XXXXXXX, KC_N, KC_E, KC_S, KC_A, BSP_NUM, SPC_SFT, XXXXXXX, XXXXXXX, SPC_SFT, BSP_NUM // trackball: default
+    [_QAI] = LAYOUT_Wimads(                                                                                                                                                                                                                                                                // default layer
+        SNIcPIN, KC_BTN2, DRGcSCR, KC_BTN1, XXXXXXX, XXXXXXX, KC_BTN1, DRGcSCR, KC_BTN2, DRGSCRL, KC_R, KC_O, KC_I, KC_T, XXXXXXX, XXXXXXX, KC_T, KC_I, KC_O, KC_R, KC_A, KC_S, KC_E, KC_N, XXXXXXX, XXXXXXX, KC_N, KC_E, KC_S, KC_A, BSP_NUM, SPC_SFT, XXXXXXX, XXXXXXX, SPC_SFT, BSP_NUM // trackball: default
         ),
     [_NUM] = LAYOUT_Wimads(                                                                                                                                                                                                                                                                  // number and symbol layer
         XXXXXXX, KC_BTN4, KC_F5, KC_BTN5, XXXXXXX, XXXXXXX, KC_BTN4, KC_F5, KC_BTN5, XXXXXXX, DOTCOMM, KC_9, KC_8, KC_7, XXXXXXX, XXXXXXX, KC_7, KC_8, KC_9, DOTCOMM, KC_0, KC_3, KC_2, KC_1, XXXXXXX, XXXXXXX, KC_1, KC_2, KC_3, KC_0, _______, _______, XXXXXXX, XXXXXXX, _______, _______ // trackball: snipe
@@ -199,13 +200,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code16(KC_LCTL);
             }
             return false;
-        case SNIPE:
-            if (record->event.pressed) {
-                charybdis_set_pointer_sniping_enabled(true);
-            } else {
-                charybdis_set_pointer_sniping_enabled(false);
-            }
-            return true;
 
         // customshift:
         default:
