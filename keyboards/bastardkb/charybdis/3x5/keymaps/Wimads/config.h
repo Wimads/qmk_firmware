@@ -9,6 +9,7 @@
 // Combos:
 #define COMBO_VARIABLE_LEN
 #define COMBO_TERM 60
+#define COMBO_TERM 60
 #define COMBO_SHOULD_TRIGGER
 
 // Capsword:

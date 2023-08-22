@@ -27,18 +27,22 @@ enum custom_keycodes {
 };
 
 // Custom keycodes:
-#define DOTCOMM LT(10, KC_DOT) // KC_DOT, KC_COMM on shif; swap behavoiur by double tap (further defined in macro)
-#define BSP_NUM LT(_NUM, KC_BSPC)
-#define SPC_SFT LSFT_T(KC_SPC)
-// Dead-hold keys: normal on tap, dead key on hold; requires "English(US)"+"Qwerty US" language+kbd settings in windows
+#define DOTCOMM LT(10, KC_DOT)    // KC_DOT or KC_COMM depending on state (further defined in macro)
+#define BSP_NUM LT(_NUM, KC_BSPC) // backspace, _NUM layer on hold
+#define SPC_SFT LSFT_T(KC_SPC)    // space, shift on hold
+
+// Dead-hold keys:               //normal on tap, dead key on hold; requires "English(US)"+"Qwerty US" language+kbd settings in windows
 #define DH_QUOT LT(11, KC_QUOT) // further defined in macro
 #define DH_GRV LT(11, KC_GRV)   // further defined in macro
 #define DH_TILD LT(12, KC_TILD) // further defined in macro
 #define DH_CIRC LT(12, KC_CIRC) // further defined in macro
-// Keycodes for combos.def (workaround for charybdis keycodes)
-#define DRGTOGc DRG_TOG
-#define DRGSCRc DRGSCRL
-#define SNIPINc SNIPING
+
+// Combo keycodes:       //workaround for using charybdis keycodes in combos.def
+#define DRGTOGc DRG_TOG // toggle dragscroll
+#define DRGSCRc DRGSCRL // dragscroll
+#define SNIPINc SNIPING // sniping
+
+#include "g/keymap_combo.h" //include combo dictionary after custom keycodes, so custom keycodes can be used in combos.def
 
 #include "g/keymap_combo.h" //include combo dictionary after custom keycodes, so custom keycodes can be used in combos.def
 
@@ -58,9 +62,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ),
 };
 
-/*********CUSTOM KEY BEHAVIOURS********/
-
-// Tap-hold configuration
+////CUSTOM KEY BEHAVIOURS////
+// Tap-hold configuration:
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case SPC_SFT:
@@ -82,7 +85,7 @@ typedef struct _customshift_keycode_t { // define customshift functions
 
 customshift_keycode_t keymap[KEY_MAP_SIZE] = {
     // customshift mapping, format: {keycode_record, keycode_shifted}
-    // Numbers and F-keys
+    // Numbers and F-keys:
     {KC_CIRC, KC_F12},
     {KC_7, KC_F7},
     {KC_8, KC_F8},
@@ -95,17 +98,17 @@ customshift_keycode_t keymap[KEY_MAP_SIZE] = {
     {KC_1, KC_F1},
     {KC_2, KC_F2},
     {KC_3, KC_F3}, // F10  F1  F2  F3
-    // punctuation
+    // punctuation:
     {KC_EXLM, KC_QUES},
     {KC_COMM, KC_SCLN},
     {KC_DOT, S(KC_SCLN)}, // !?  ,;  .:
-    // symbols
+    // symbols:
     {KC_SLSH, KC_BSLS},
     {KC_PIPE, KC_BSLS},
     {KC_DLR, RALT(KC_5)}, // /\  |\  $€
     {KC_LCBR, KC_LBRC},
     {KC_RCBR, KC_RBRC}, // brackets for qwertai
-    // Volume and brightness
+    // Volume and brightness:
     {KC_VOLU, KC_BRIU},
     {KC_VOLD, KC_BRID},
 };
@@ -117,7 +120,7 @@ int get_index_customshift(uint16_t keycode_record) { // find corresponding item 
     return -1; // return -1 if pressed key is not in customshift map
 };
 
-// macros:
+/// Macros:
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     int            index         = get_index_customshift(keycode); // check if keycode is in customshift map
     const uint16_t mod_shift     = get_mods() & MOD_MASK_SHIFT;    // track shift state for customshift behaviours
@@ -155,39 +158,43 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         // Dead-hold keys:
         case DH_QUOT:
-            if (record->event.pressed && !record->tap.count) {
+            if (record->event.pressed && record->tap.count) { // if tapped, behave as normal key
+                tap_code16(KC_QUOT);
+                tap_code16(KC_SPC);
+            } else if (record->event.pressed) { // if held, behave as dead key
+                tap_code16(KC_QUOT);
                 if (mod_shift) {
                     unregister_mods(mod_shift);
-                    tap_code16(S(C(KC_SCLN)));
-                } else {
-                    tap_code16(C(KC_QUOT));
-                }
-                return false;
+                } // unregister shift to resolve conflict of holding shifted dead key
             }
-            return true;
+            return false;
         case DH_GRV:
-            if (record->event.pressed && !record->tap.count) {
+            if (record->event.pressed && record->tap.count) {
+                tap_code16(KC_GRV);
+                tap_code16(KC_SPC);
+            } else if (record->event.pressed) {
+                tap_code16(KC_GRV);
                 layer_off(_NUM);
-                tap_code16(C(KC_GRV));
-                return false;
             }
-            return true;
+            return false;
         case DH_TILD:
-            if (record->event.pressed && !record->tap.count) {
-                layer_off(_NUM);
-                tap_code16(C(S(KC_GRV)));
+            if (record->event.pressed && record->tap.count) {
+                tap_code16(S(KC_GRV));
+                tap_code16(KC_SPC);
             } else if (record->event.pressed) {
                 tap_code16(S(KC_GRV));
-            }
-            return false; // can't return true for tapped code because outside basic keycode range
-        case DH_CIRC:
-            if (record->event.pressed && !record->tap.count) {
                 layer_off(_NUM);
-                tap_code16(C(S(KC_6)));
+            }
+            return false;
+        case DH_CIRC:
+            if (record->event.pressed && record->tap.count) {
+                tap_code16(S(KC_6));
+                tap_code16(KC_SPC);
             } else if (record->event.pressed) {
                 tap_code16(S(KC_6));
+                layer_off(_NUM);
             }
-            return false; // can't return true for tapped code because outside basic keycode range
+            return false;
 
         // trackball behaviours:
         case DRGZOOM: // LCTL(DRGSCRL)
