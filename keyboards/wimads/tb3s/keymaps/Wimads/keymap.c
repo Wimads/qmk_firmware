@@ -14,17 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-////TO DO////
-/*
-*/
 #include QMK_KEYBOARD_H
 
-////LAYER & KEYCODE DEFINITIONS////
 enum layers {
-   _DEF,
-   _QMK,
-   _VARUP,
-   _VARDN
+    _DEF,
 };
 
 #define LMB KC_BTN1
@@ -33,69 +26,47 @@ enum layers {
 #define BCK KC_BTN4
 #define FWD KC_BTN5
 
-#define RST_QMK LT(_QMK, QK_BOOT) //
-#define FWD_VARUP LT(_VARUP, FWD)
-#define BCK_VARDN LT(_VARDN, BCK)
-#define DRTGSCR LT(10, KC_NO)     //drag-toggle-scroll >>further defined in macro
+#define SCR_SNI LT(10, KC_NO) // dragscroll-sniping
 
 #include "gboards/g/keymap_combo.h"
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_DEF] = LAYOUT(RMB,    DRTGSCR,  LMB),
-    [_QMK] = LAYOUT(EE_CLR, DPI_RMOD, DPI_MOD)
-};
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {[_DEF] = LAYOUT(RMB, SCR_SNI, LMB)};
 
-////CUSTOM KEY BEHAVIOURS////
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    static bool dragscroll = false; //dragscroll active or not
-    static bool drag_toggle = false; //dragscroll was activated via toggle or not
-    switch(keycode) {
-        case RST_QMK:
-            if (record->event.pressed && record->tap.count){
-                reset_keyboard();
-                return false;
-            } return true;
-
-        case FWD_VARUP:
-            if (record->event.pressed && record->tap.count){
-                tap_code16(KC_BTN5);
-                return false;
-            } return true;
-        case BCK_VARDN:
-            if (record->event.pressed && record->tap.count){
-                tap_code16(KC_BTN4);
-                return false;
-            } else if (record->event.pressed) {
-                return true;
-                register_mods(KC_LSFT);
-            } else {
-                unregister_mods(KC_LSFT);
-                return true;
-            }
-
-        case DRTGSCR: //dragscroll / drag_toggle / sniping - all in one key!
-            if (record->event.pressed && record->tap.count) { //on tap
-                //toggle dragscroll on/off
-                dragscroll = !dragscroll; //invert dragscroll state
-                charybdis_set_pointer_dragscroll_enabled(dragscroll); //set dragscroll
-                drag_toggle = dragscroll; //set drag_toggle state
-            } else if(record->event.pressed && !drag_toggle) { //on hold && not toggled
-                //turn dragscroll on while held
+    static bool dragscroll  = false; // dragscroll active or not
+    static bool drag_toggle = false; // dragscroll was activated via toggle or not
+    static bool sniping     = false;
+    switch (keycode) {
+        case SCR_SNI:                                         // LCTL(DRGSCRL)
+            if (record->event.pressed && record->tap.count) { // on tap
+                // toggle dragscroll on/off
+                dragscroll = !dragscroll;                             // invert dragscroll state
+                charybdis_set_pointer_dragscroll_enabled(dragscroll); // set dragscroll
+                drag_toggle = dragscroll;                             // set drag_toggle state
+            } else if (record->event.pressed && !drag_toggle) {       // on hold && not toggled
+                // turn dragscroll on while held
                 dragscroll = true;
                 charybdis_set_pointer_dragscroll_enabled(dragscroll);
-            } else if(record->event.pressed && drag_toggle) { //on hold && toggled (ie. tap once and then hold)
-                //turn dragscroll off, and turn sniping on
+            } else if (record->event.pressed && drag_toggle) { // on hold && toggled (ie. tap once and then hold)
+                // turn dragscroll off, and turn sniping on
                 drag_toggle = false;
-                dragscroll = false;
+                dragscroll  = false;
+                sniping     = true;
                 charybdis_set_pointer_dragscroll_enabled(dragscroll);
-            } else { //on release
-                if(!drag_toggle) { //if no drag_toggle, turn off dragscroll
+                charybdis_set_pointer_sniping_enabled(sniping);
+            } else {           // on release
+                if (sniping) { // if sniping true, turn off sniping
+                    sniping = false;
+                    charybdis_set_pointer_sniping_enabled(sniping);
+                } else if (!drag_toggle) { // if no drag_toggle, turn off dragscroll
                     dragscroll = false;
                     charybdis_set_pointer_dragscroll_enabled(dragscroll);
-                } //else do nothing
-            } return false;
+                } // else do nothing
+            }
+            return false;
+
         default:
             return true;
-    }//.switch(keycode)
+    } //.switch(keycode)
     return true;
 };

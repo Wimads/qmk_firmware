@@ -23,29 +23,34 @@
 #include <string.h>
 
 #ifndef CHARYBDIS_MINIMUM_DEFAULT_DPI
-#    define CHARYBDIS_MINIMUM_DEFAULT_DPI 100
+#    define CHARYBDIS_MINIMUM_DEFAULT_DPI 450
 #endif // CHARYBDIS_MINIMUM_DEFAULT_DPI
 
 #ifndef CHARYBDIS_DEFAULT_DPI_CONFIG_STEP
-#    define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 100
+#    define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 200
 #endif // CHARYBDIS_DEFAULT_DPI_CONFIG_STEP
 
 #ifndef CHARYBDIS_MINIMUM_SNIPING_DPI
-#    define CHARYBDIS_MINIMUM_SNIPING_DPI 100
+#    define CHARYBDIS_MINIMUM_SNIPING_DPI 200
 #endif // CHARYBDIS_MINIMUM_SNIPER_MODE_DPI
 
 #ifndef CHARYBDIS_SNIPING_DPI_CONFIG_STEP
 #    define CHARYBDIS_SNIPING_DPI_CONFIG_STEP 100
 #endif // CHARYBDIS_SNIPING_DPI_CONFIG_STEP
 
+// Fixed DPI for drag-scroll.
 #ifndef CHARYBDIS_DRAGSCROLL_DPI
 #    define CHARYBDIS_DRAGSCROLL_DPI 100
 #endif // CHARYBDIS_DRAGSCROLL_DPI
 
+#ifndef CHARYBDIS_DRAGSCROLL_BUFFER_SIZE
+#    define CHARYBDIS_DRAGSCROLL_BUFFER_SIZE 2
+#endif // !CHARYBDIS_DRAGSCROLL_BUFFER_SIZE
+
 typedef union {
-    uint16_t raw;
+    uint8_t raw;
     struct {
-        uint8_t pointer_default_dpi : 7; // 16 steps available.
+        uint8_t pointer_default_dpi : 1; // 16 steps available.
         uint8_t pointer_sniping_dpi : 1; // 4 steps available.
         bool    is_dragscroll_enabled : 1;
         bool    is_sniping_enabled : 1;
@@ -173,29 +178,35 @@ void charybdis_set_pointer_dragscroll_enabled(bool enable) {
  * Implement drag-scroll.
  */
 static void pointing_device_task_charybdis(report_mouse_t* mouse_report) {
+    static int16_t scroll_buffer_x = 0;
+    static int16_t scroll_buffer_y = 0;
     if (g_charybdis_config.is_dragscroll_enabled) {
 #ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
-        mouse_report->h = mouse_report->x * -1;
+        scroll_buffer_x -= mouse_report->x;
 #else
-        mouse_report->h = mouse_report->x;
-
+        scroll_buffer_x += mouse_report->x;
 #endif // CHARYBDIS_DRAGSCROLL_REVERSE_X
-
 #ifdef CHARYBDIS_DRAGSCROLL_REVERSE_Y
-        mouse_report->v = mouse_report->y * -1;
+        scroll_buffer_y -= mouse_report->y;
 #else
-        mouse_report->v = mouse_report->y;
+        scroll_buffer_y += mouse_report->y;
 #endif // CHARYBDIS_DRAGSCROLL_REVERSE_Y
-
-        // set mouse xy to 0 when scrolling
         mouse_report->x = 0;
         mouse_report->y = 0;
+        if (abs(scroll_buffer_x) > CHARYBDIS_DRAGSCROLL_BUFFER_SIZE) {
+            mouse_report->h = scroll_buffer_x > 0 ? 1 : -1;
+            scroll_buffer_x = 0;
+        }
+        if (abs(scroll_buffer_y) > CHARYBDIS_DRAGSCROLL_BUFFER_SIZE) {
+            mouse_report->v = scroll_buffer_y > 0 ? 1 : -1;
+            scroll_buffer_y = 0;
+        }
     }
 }
 
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
-    mouse_report = pointing_device_task_user(mouse_report);
     pointing_device_task_charybdis(&mouse_report);
+    mouse_report = pointing_device_task_user(mouse_report);
     return mouse_report;
 }
 
@@ -286,6 +297,11 @@ bool shutdown_kb(bool jump_to_bootloader) {
 
 // Hardware Setup
 void keyboard_pre_init_kb(void) {
+    // debug_enable  = true;
+    // debug_matrix  = true;
+    // debug_mouse   = true;
+    // debug_encoder = true;
+
     /* Ground all output pins connected to ground. This provides additional
      * pathways to ground. If you're messing with this, know this: driving ANY
      * of these pins high will cause a short. On the MCU. Ka-blooey.
