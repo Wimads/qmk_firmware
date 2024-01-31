@@ -26,25 +26,37 @@ enum layers {
 #define BCK KC_BTN4
 #define FWD KC_BTN5
 
-#define SCR_SNI LT(10, KC_NO) // dragscroll-sniping
+#define SCR_SNI LT(10, KC_NO) //dragscroll-sniping (further defined in macro)
+
+enum custom_keycodes {
+        EE_BOOT = SAFE_RANGE, //clear eeprom, then enter boot mode
+};
+
 
 #include "gboards/g/keymap_combo.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {[_DEF] = LAYOUT(RMB, SCR_SNI, LMB)};
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    static bool dragscroll  = false; // dragscroll active or not
-    static bool drag_toggle = false; // dragscroll was activated via toggle or not
-    static bool sniping     = false;
-    switch (keycode) {
-        case SCR_SNI:                                         // dragscroll / drag_toggle / sniping - all in one key!
-            if (record->event.pressed && record->tap.count) { // on tap
-                // toggle dragscroll on/off
-                dragscroll = !dragscroll;                             // invert dragscroll state
-                charybdis_set_pointer_dragscroll_enabled(dragscroll); // set dragscroll
-                drag_toggle = dragscroll;                             // set drag_toggle state
-            } else if (record->event.pressed && !drag_toggle) {       // on hold && not toggled
-                // turn dragscroll on while held
+    static bool dragscroll = false; //dragscroll active or not
+    static bool drag_toggle = false; //dragscroll was activated via toggle or not
+    static bool sniping = false;
+    switch(keycode) {
+        case EE_BOOT:
+            if (record->event.pressed) {
+                eeconfig_init(); //clear eeproms
+                wait_ms(10); //wait 10 ms
+                reset_keyboard(); //enter bootmode
+            } return false;
+
+        case SCR_SNI: //dragscroll / drag_toggle / sniping - all in one key!
+            if (record->event.pressed && record->tap.count) { //on tap
+                //toggle dragscroll on/off
+                dragscroll = !dragscroll; //invert dragscroll state
+                charybdis_set_pointer_dragscroll_enabled(dragscroll); //set dragscroll
+                drag_toggle = dragscroll; //set drag_toggle state
+            } else if(record->event.pressed && !drag_toggle) { //on hold && not toggled
+                //turn dragscroll on while held
                 dragscroll = true;
                 charybdis_set_pointer_dragscroll_enabled(dragscroll);
             } else if (record->event.pressed && drag_toggle) { // on hold && toggled (ie. tap once and then hold)
@@ -54,8 +66,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
                 sniping     = true;
                 charybdis_set_pointer_dragscroll_enabled(dragscroll);
                 charybdis_set_pointer_sniping_enabled(sniping);
-            } else {           // on release
-                if (sniping) { // if sniping true, turn off sniping
+            } else { //on release
+                if(sniping) { //if sniping true, turn off sniping
                     sniping = false;
                     charybdis_set_pointer_sniping_enabled(sniping);
                 } else if (!drag_toggle) { // if no drag_toggle, turn off dragscroll
