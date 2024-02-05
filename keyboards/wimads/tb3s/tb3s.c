@@ -21,10 +21,11 @@
 
 #include "tb3s.h"
 #include <string.h>
+#include "maccel.c"
 
-#ifndef CHARYBDIS_MINIMUM_DEFAULT_DPI
-#    define CHARYBDIS_MINIMUM_DEFAULT_DPI 450
-#endif // CHARYBDIS_MINIMUM_DEFAULT_DPI
+#    ifndef CHARYBDIS_MINIMUM_DEFAULT_DPI
+#        define CHARYBDIS_MINIMUM_DEFAULT_DPI 450
+#    endif // CHARYBDIS_MINIMUM_DEFAULT_DPI
 
 #ifndef CHARYBDIS_DEFAULT_DPI_CONFIG_STEP
 #    define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 200
@@ -43,9 +44,9 @@
 #    define CHARYBDIS_DRAGSCROLL_DPI 100
 #endif // CHARYBDIS_DRAGSCROLL_DPI
 
-#ifndef CHARYBDIS_DRAGSCROLL_BUFFER_SIZE
-#    define CHARYBDIS_DRAGSCROLL_BUFFER_SIZE 2
-#endif // !CHARYBDIS_DRAGSCROLL_BUFFER_SIZE
+#    ifndef CHARYBDIS_DRAGSCROLL_BUFFER_SIZE
+#        define CHARYBDIS_DRAGSCROLL_BUFFER_SIZE 6
+#    endif // !CHARYBDIS_DRAGSCROLL_BUFFER_SIZE
 
 typedef union {
     uint8_t raw;
@@ -205,8 +206,8 @@ static void pointing_device_task_charybdis(report_mouse_t* mouse_report) {
 }
 
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
-    pointing_device_task_charybdis(&mouse_report);
     mouse_report = pointing_device_task_user(mouse_report);
+    pointing_device_task_charybdis(&mouse_report);
     return mouse_report;
 }
 
@@ -315,3 +316,5 @@ void keyboard_pre_init_kb(void) {
 
     keyboard_pre_init_user();
 }
+
+
