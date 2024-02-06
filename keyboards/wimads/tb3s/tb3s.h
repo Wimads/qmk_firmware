@@ -23,7 +23,7 @@
 
 #include "quantum.h"
 
-#ifndef NO_CHARYBDIS_KEYCODES
+#    ifndef NO_CHARYBDIS_KEYCODES
 enum charybdis_keycodes {
     POINTER_DEFAULT_DPI_FORWARD = QK_KB_0,
     POINTER_DEFAULT_DPI_REVERSE,
