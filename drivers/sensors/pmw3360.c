@@ -15,8 +15,6 @@ uint16_t pmw33xx_get_cpi(uint8_t sensor) {
     }
 
     uint8_t cpival = pmw33xx_read(sensor, REG_Config1);
-    // In some cases (100, 900, 1700, 2500), reading the CPI corrupts the firmware and the sensor stops responding.
-    // To avoid this, we write the value back to the sensor, which seems to prevent the corruption.
     pmw33xx_write(sensor, REG_Config1, cpival);
     return (uint16_t)((cpival + 1) & 0xFF) * PMW33XX_CPI_STEP;
 }
@@ -35,6 +33,7 @@ const uint8_t pmw33xx_firmware_signature[3] PROGMEM = {0x42, 0xBD, 0x04};
 
 // Firmware Blob for PMW3360
 // clang-format off
+const uint8_t pmw33xx_firmware_data[PMW33XX_FIRMWARE_LENGTH] PROGMEM = { //original firmware blob (backup)
 const uint8_t pmw33xx_firmware_data[PMW33XX_FIRMWARE_LENGTH] PROGMEM = { //original firmware blob (backup)
     0x01, 0x04, 0x8E, 0x96, 0x6E, 0x77, 0x3E, 0xFE, 0x7E, 0x5F, 0x1D, 0xB8, 0xF2, 0x66, 0x4E, 0xFF,
     0x5D, 0x19, 0xB0, 0xC2, 0x04, 0x69, 0x54, 0x2A, 0xD6, 0x2E, 0xBF, 0xDD, 0x19, 0xB0, 0xC3, 0xE5,
@@ -293,5 +292,7 @@ const uint8_t pmw33xx_firmware_data[PMW33XX_FIRMWARE_LENGTH] PROGMEM = { //origi
     0x7B, 0x74, 0x4B, 0x14, 0xAA, 0xB7, 0xEC, 0x3B, 0xD5, 0x28, 0xD2, 0x07, 0x6D, 0x39, 0xD1, 0x20,
     0xC2, 0xE7, 0x4C, 0x1A, 0x97, 0x8D, 0x98, 0xB2, 0xC7, 0x0C, 0x59, 0x28, 0xF3, 0x9B
 };
+
+
 
 

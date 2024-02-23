@@ -16,12 +16,7 @@
 
 #pragma once
 
-#define CHARYBDIS_DRAGSCROLL_REVERSE_Y
-
-// combos
+//combos
 #define COMBO_VARIABLE_LEN
 #define COMBO_TERM 60
 
-#define MACCEL_DEBUG //enable debug console
-#undef  PRINTF_SUPPORT_DECIMAL_SPECIFIERS
-#define PRINTF_SUPPORT_DECIMAL_SPECIFIERS 1  //enable floats in debug console

@@ -22,33 +22,33 @@
 #include "tb3s.h"
 #include <string.h>
 
-#    ifndef CHARYBDIS_MINIMUM_DEFAULT_DPI
-#        define CHARYBDIS_MINIMUM_DEFAULT_DPI 100
-#    endif // CHARYBDIS_MINIMUM_DEFAULT_DPI
+#ifndef CHARYBDIS_MINIMUM_DEFAULT_DPI
+#    define CHARYBDIS_MINIMUM_DEFAULT_DPI 100
+#endif // CHARYBDIS_MINIMUM_DEFAULT_DPI
 
-#    ifndef CHARYBDIS_DEFAULT_DPI_CONFIG_STEP
-#        define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 100
-#    endif // CHARYBDIS_DEFAULT_DPI_CONFIG_STEP
+#ifndef CHARYBDIS_DEFAULT_DPI_CONFIG_STEP
+#    define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 100
+#endif // CHARYBDIS_DEFAULT_DPI_CONFIG_STEP
 
-#    ifndef CHARYBDIS_MINIMUM_SNIPING_DPI
-#        define CHARYBDIS_MINIMUM_SNIPING_DPI 100
-#    endif // CHARYBDIS_MINIMUM_SNIPER_MODE_DPI
+#ifndef CHARYBDIS_MINIMUM_SNIPING_DPI
+#    define CHARYBDIS_MINIMUM_SNIPING_DPI 100
+#endif // CHARYBDIS_MINIMUM_SNIPER_MODE_DPI
 
 #ifndef CHARYBDIS_SNIPING_DPI_CONFIG_STEP
 #    define CHARYBDIS_SNIPING_DPI_CONFIG_STEP 100
 #endif // CHARYBDIS_SNIPING_DPI_CONFIG_STEP
 
-#    ifndef CHARYBDIS_DRAGSCROLL_DPI
-#        define CHARYBDIS_DRAGSCROLL_DPI 100
-#    endif // CHARYBDIS_DRAGSCROLL_DPI
+#ifndef CHARYBDIS_DRAGSCROLL_DPI
+#    define CHARYBDIS_DRAGSCROLL_DPI 100
+#endif // CHARYBDIS_DRAGSCROLL_DPI
 
 typedef union {
     uint16_t raw;
     struct {
-        uint8_t  pointer_default_dpi : 7; // 16 steps available.
-        uint8_t  pointer_sniping_dpi : 1; // 4 steps available.
-        bool     is_dragscroll_enabled : 1;
-        bool     is_sniping_enabled : 1;
+        uint8_t pointer_default_dpi : 7; // 16 steps available.
+        uint8_t pointer_sniping_dpi : 1; // 4 steps available.
+        bool    is_dragscroll_enabled : 1;
+        bool    is_sniping_enabled : 1;
     } __attribute__((packed));
 } charybdis_config_t;
 
@@ -174,24 +174,28 @@ void charybdis_set_pointer_dragscroll_enabled(bool enable) {
  */
 static void pointing_device_task_charybdis(report_mouse_t* mouse_report) {
     if (g_charybdis_config.is_dragscroll_enabled) {
-#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
-        mouse_report->h = -1*mouse_report->x;
-#    else
+#ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
+        mouse_report->h = mouse_report->x * -1;
+#else
         mouse_report->h = mouse_report->x;
-#    endif // CHARYBDIS_DRAGSCROLL_REVERSE_X
-#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_Y
-        mouse_report->v = -1*mouse_report->y;
-#    else
+
+#endif // CHARYBDIS_DRAGSCROLL_REVERSE_X
+
+#ifdef CHARYBDIS_DRAGSCROLL_REVERSE_Y
+        mouse_report->v = mouse_report->y * -1;
+#else
         mouse_report->v = mouse_report->y;
-#    endif // CHARYBDIS_DRAGSCROLL_REVERSE_Y
+#endif // CHARYBDIS_DRAGSCROLL_REVERSE_Y
+
+        // set mouse xy to 0 when scrolling
         mouse_report->x = 0;
         mouse_report->y = 0;
     }
 }
 
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
-    pointing_device_task_charybdis(&mouse_report);
     mouse_report = pointing_device_task_user(mouse_report);
+    pointing_device_task_charybdis(&mouse_report);
     return mouse_report;
 }
 
@@ -295,5 +299,3 @@ void keyboard_pre_init_kb(void) {
 
     keyboard_pre_init_user();
 }
-
-
