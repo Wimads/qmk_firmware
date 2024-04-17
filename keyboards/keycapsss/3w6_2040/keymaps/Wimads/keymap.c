@@ -17,21 +17,13 @@ enum layers {
 };
 
 /// Custom keycodes..
-// combi-mods:
-#define OSMLCTL OSM(MOD_LCTL)
-#define OSMLSFT OSM(MOD_LSFT)
-#define OSMLALT OSM(MOD_LALT)
-#define OSMLGUI OSM(MOD_LGUI)
-#define OSMRCTL OSM(MOD_RCTL)
-#define OSMRSFT OSM(MOD_RSFT)
-#define OSMRALT OSM(MOD_RALT)
-#define OSMRGUI OSM(MOD_RGUI)
 // Tap-hold keys:
 #define FFF_NUM LT(_NUM, KC_F)
 #define JJJ_NUM LT(_NUM, KC_J)
-#define SPC_SFT RSFT_T(KC_SPC)
-#define UND_SFT LSFT_T(KC_UNDS) // further defined in macro (because shifted keycodes in _T() is not possible)
-#define EQL_RLT RALT_T(KC_EQL)
+#define SPCLSFT LSFT_T(KC_SPC)
+#define SPCRSFT RSFT_T(KC_SPC)
+#define UNDLSFT LSFT_T(KC_UNDS) // further defined in macro (because shifted keycodes in _T() is not possible)
+#define EQLRALT RALT_T(KC_EQL)
 // Auto-Dead-Key:   //auto-send space after deadkey, unless ADK_ key was held; requires "English(US)"+"Qwerty US" language+kbd settings in windows
 #define ADK_A LT(11, KC_A)
 #define ADK_E LT(11, KC_E)
@@ -61,34 +53,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	  KC_Q,    KC_W,    ADK_E,   KC_R,    KC_T,             KC_Y,    ADK_U,   ADK_I,   ADK_O,   KC_P,
 	  ADK_A,   KC_S,    KC_D,    FFF_NUM, KC_G,             KC_H,    JJJ_NUM, KC_K,    KC_L,    KC_QUOT,
 	  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             ADK_N,   KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-            			OSMLALT, OSMLSFT, OSMLCTL,          OSMRALT, SPC_SFT, MO(_MISC)
+            			KC_LALT, KC_LSFT, KC_LCTL,          KC_RALT, SPCRSFT, MO(_MISC)
   ),
   //Qwerty e: (unmodified qwerty layout for emulation in for example monkeytype)
   [_QTYe] = LAYOUT_split_3x5_3(
 	  KC_Q,    KC_W,    ADK_E,   KC_R,    KC_T,             KC_Y,    ADK_U,   ADK_I,   ADK_O,   KC_P,
 	  ADK_A,   KC_S,    KC_D,    FFF_NUM, KC_G,             KC_H,    JJJ_NUM, KC_K,    KC_L,    KC_SCLN,
 	  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,
-			          	OSMLALT, OSMLSFT, OSMLCTL,          OSMRALT, SPC_SFT, MO(_MISC)
+			          	KC_LALT, KC_LSFT, KC_LCTL,          KC_RALT, SPCRSFT, MO(_MISC)
   ),
   //CAD mode: (a mostly transparent layer, but will activate extra combos)
   [_CAD] = LAYOUT_split_3x5_3(
 	  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______,
 	  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______,
 	  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______,
-						_______, SPC_SFT, _______,          _______, _______, _______
+						_______, SPCLSFT, _______,          _______, _______, _______
   ),
   //Numbers and symbols:
   [_NUM] = LAYOUT_split_3x5_3(
 	  KC_AT,   KC_DLR,  KC_AMPR, KC_PIPE, KC_TILD,          KC_CIRC, KC_7,    KC_8,    KC_9,    KC_PERC,
 	  KC_LCBR, KC_LPRN, KC_RPRN, KC_RCBR, KC_GRV,           KC_PLUS, KC_4,    KC_5,    KC_6,    KC_MINS,
 	  KC_LBRC, KC_LT,   KC_GT,   KC_RBRC, KC_HASH,          KC_ASTR, KC_1,    KC_2,    KC_3,    KC_SLSH,
-						_______, UND_SFT, _______,          EQL_RLT, KC_0,    DOTCOMM
+						_______, UNDLSFT, _______,          EQLRALT, KC_0,    DOTCOMM
   ),
   [_RNUM] = LAYOUT_split_3x5_3(
 	  _______, _______, _______, _______, _______,          KC_CIRC, KC_7,    KC_8,    KC_9,    KC_PERC,
 	  _______, _______, _______, _______, _______,          KC_PLUS, KC_4,    KC_5,    KC_6,    KC_MINS,
 	  _______, _______, _______, _______, _______,          KC_ASTR, KC_1,    KC_2,    KC_3,    KC_SLSH,
-						_______, _______, _______,          EQL_RLT, KC_0,    DOTCOMM
+						_______, _______, _______,          EQLRALT, KC_0,    DOTCOMM
   ),
   //OTHER:
   [_MISC] = LAYOUT_split_3x5_3(
@@ -203,13 +195,6 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 // Tap-hold per key config:
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case ADK_A:
-        case ADK_E:
-        case ADK_U:
-        case ADK_I:
-        case ADK_O:
-        case ADK_N:
-            return 200;
         default:
             return TAPPING_TERM;
     }
@@ -250,24 +235,6 @@ int get_index_multifunc(uint16_t kc_record) { // find corresponding item in mult
 };
 ///..multifunc keycodes
 
-/*void oneshot_mods_changed_user(uint8_t mods) {
-    if (mods & MOD_MASK_CTRL) {
-        printf("oneshot: ctrl");
-    }
-    if (mods & MOD_MASK_SHIFT) {
-        printf("oneshot: shift");
-    }
-    if (mods & MOD_MASK_ALT) {
-        printf("oneshot: alt");
-    }
-    if (mods & MOD_MASK_GUI) {
-        printf("oneshot: gui");
-    }
-    if (!mods) {
-        printf("oneshot: none");
-    }
-}*/
-
 /// Macros..
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // variables:
@@ -276,39 +243,94 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     const uint16_t  mod_shift     = get_mods() & MOD_MASK_SHIFT;  // track shift state for custom shift behaviours (defined in multifunc keycodes)
     static uint16_t auto_dead_key = KC_SPC;                       // keycode to send after dead key (defined in multifunc keycodes)
     static uint16_t adk_mod_shift = 0;                            // track shift state for auto_dead_key
-    static bool     mod_held      = false;                        // check if any mod is being held down
+    static uint16_t osm_mod1      = 0;                            // oneshot memory 1
+    static uint16_t osm_mod2      = 0;                            // oneshot memory 2
+    static uint32_t osm_timer;                                    // oneshot timer
+#define OSM_TIMEOUT 700
 
-    // Decide whether to cancel oneshot mods:
-    switch (keycode) { // DO NOT PUT MACROS HERE, use 2nd switch case for macros.
+    // Oneshot mods:
+    switch (keycode) {
+        // DO NOT PUT MACROS HERE, use 2nd switch case for macros.
         // mods:
         case KC_LCTL ... KC_RGUI:
-        // oneshot mods:
-        case OSMLCTL:
-        case OSMLSFT:
-        case OSMLALT:
-        case OSMLGUI:
-        case OSMRCTL:
-        case OSMRSFT:
-        case OSMRALT:
-        case OSMRGUI:
-            if (record->event.pressed && !record->tap.count) {
-                // when held:
-                mod_held = true;
+            if (record->event.pressed) {
+                if (timer_elapsed(osm_timer) > OSM_TIMEOUT) {
+                    // if not pressed within timeout, clear osm_mod memory
+                    osm_mod1 = osm_mod2 = 0;
+                }
+
+                osm_timer = timer_read32();
+
+                if (osm_mod1 != 0) {
+                    wait_ms(TAP_CODE_DELAY);
+                    register_mods(osm_mod1);
+                }
+                if (osm_mod2 != 0) {
+                    wait_ms(TAP_CODE_DELAY);
+                    register_mods(osm_mod2);
+                }
+                wait_ms(TAP_CODE_DELAY);
+                return true;
             } else {
-                // when tapped or released:
-                mod_held = false;
+                // on release:
+                if (timer_elapsed(osm_timer) < OSM_TIMEOUT) {
+                    // if not timed out that indicates it was tapped --> store new osm_mod
+                    if (osm_mod1 == 0) {
+                        osm_mod1 = get_mods();
+                    } else if (osm_mod2 == 0 && get_mods() != osm_mod1) {
+                        osm_mod2 = get_mods() ^ osm_mod1;
+                    } else {
+                        osm_mod1 = osm_mod2 = 0;
+                    }
+                } else {
+                    // if timed out that indicates it was held --> clear osm_mod memory
+                    osm_mod1 = osm_mod2 = 0;
+                }
+                clear_mods();
+                return true;
+            }
+        // Mod-taps:
+        case SPCLSFT:
+        case SPCRSFT:
+        case UNDLSFT:
+        case EQLRALT:
+            if (record->event.pressed && record->tap.count) {
+                // when tapped:
+                if (keycode == UNDLSFT) {
+                    tap_code16(S(KC_UNDS));
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (record->event.pressed) {
+                // when held:
+                if (osm_mod1 != 0) {
+                    wait_ms(TAP_CODE_DELAY);
+                    register_mods(osm_mod1);
+                }
+                if (osm_mod2 != 0) {
+                    wait_ms(TAP_CODE_DELAY);
+                    register_mods(osm_mod2);
+                }
+                wait_ms(TAP_CODE_DELAY);
+                return true;
+            } else {
+                // on release:
+                osm_mod1 = osm_mod2 = 0; // always clear osm memory after mod-tap key
+                clear_mods();
+                return true;
+            }
+        // non-mods:
+        default:
+            if (record->event.pressed) {
+                // if non-modifier is pressed --> clear osm_mod memory
+                osm_mod1 = osm_mod2 = 0;
             }
             break; // return in 2nd switch case only
 
-        default: // non-modifiers
-            if (record->event.pressed && !mod_held) {
-                // when a non-modifier key is pressed && no modifiers are held:
-                clear_oneshot_mods();
-            }
-            break; // return in 2nd switch case only
-    }
+    } //..switch oneshot mods
 
-    // macros:
+    // Other macros:
     switch (keycode) {
         case CLEARKB: // clear keyboard
             if (record->event.pressed) {
@@ -343,7 +365,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
 
             // special keycodes:
-        case UND_SFT:
+        case UNDLSFT:
             if (record->event.pressed && record->tap.count) {
                 tap_code16(S(KC_UNDS));
                 return false;
@@ -434,8 +456,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             } //..if(index != -1)
 
-    } //..switch(keycode)
+    } //..switch(keycode) other macros
 
     return true; // if key is not in multifunc map or other macro, return normal key behaviour
-};
+
+}; //..process_record_user
 ///..Macros

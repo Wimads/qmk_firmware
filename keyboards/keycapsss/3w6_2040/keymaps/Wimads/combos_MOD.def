@@ -1,11 +1,12 @@
 ////START marker MOD combos////
 COMB(MOD_START,     KC_NO,          KC_NO, KC_NO)
 
-COMB(QTY_GUI,       OSMLGUI,        OSMLALT, OSMLCTL)
-COMB(QTY_CTL,       OSMRCTL,        OSMRALT, MO(_MISC))
+COMB(QTY_GUI,       KC_LGUI,        KC_LALT, KC_LCTL)
+COMB(QTY_CTL,       KC_RCTL,        KC_RALT, MO(_MISC))
 
-COMB(QTY_HYPR,      KC_MEH,         OSMLALT, OSMLSFT, OSMLCTL)
-COMB(CAD_HYPR,      KC_HYPR,        OSMRALT, SPC_SFT, MO(_MISC))
+COMB(QTY_MEH,       KC_MEH,         KC_LALT, KC_LSFT, KC_LCTL)
+COMB(CAD_MEH,       KC_MEH,         KC_LALT, SPCLSFT, KC_LCTL)
+COMB(QTY_HYPR,      KC_HYPR,        KC_RALT, SPCRSFT, MO(_MISC))
 
 ////FINAL marker MOD combos////
 COMB(MOD_FINAL,     KC_NO,          KC_NO, KC_NO)
