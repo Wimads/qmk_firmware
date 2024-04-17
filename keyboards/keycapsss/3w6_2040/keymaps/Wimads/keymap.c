@@ -36,8 +36,8 @@ enum layers {
 // Tap-hold keys:
 #define FFF_NUM LT(_NUM, KC_F)
 #define JJJ_NUM LT(_NUM, KC_J)
-#define SPC_SFT LSFT_T(KC_SPC)
-#define UND_SFT RSFT_T(KC_UNDS) // further defined in macro (because shifted keycodes in _T() is not possible)
+#define SPC_SFT RSFT_T(KC_SPC)
+#define UND_SFT LSFT_T(KC_UNDS) // further defined in macro (because shifted keycodes in _T() is not possible)
 #define EQL_RLT RALT_T(KC_EQL)
 // Auto-Dead-Key:   //auto-send space after deadkey, unless ADK_ key was held; requires "English(US)"+"Qwerty US" language+kbd settings in windows
 #define ADK_A LT(11, KC_A)
@@ -68,20 +68,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	  KC_Q,    KC_W,    ADK_E,   KC_R,    KC_T,             KC_Y,    ADK_U,   ADK_I,   ADK_O,   KC_P,
 	  ADK_A,   KC_S,    KC_D,    FFF_NUM, KC_G,             KC_H,    JJJ_NUM, KC_K,    KC_L,    KC_QUOT,
 	  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             ADK_N,   KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-						KC_LALT, KC_LSFT, KC_LCTL,          KC_RALT, SPC_SFT, MO(_MISC)
+            			OSMLALT, OSMLSFT, OSMLCTL,          OSMRALT, SPC_SFT, MO(_MISC)
   ),
   //Qwerty e: (unmodified qwerty layout for emulation in for example monkeytype)
   [_QTYe] = LAYOUT_split_3x5_3(
 	  KC_Q,    KC_W,    ADK_E,   KC_R,    KC_T,             KC_Y,    ADK_U,   ADK_I,   ADK_O,   KC_P,
 	  ADK_A,   KC_S,    KC_D,    FFF_NUM, KC_G,             KC_H,    JJJ_NUM, KC_K,    KC_L,    KC_SCLN,
 	  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,
-						KC_LALT, KC_LSFT, KC_LCTL,          KC_RALT, SPC_SFT, MO(_MISC)
+			          	OSMLALT, OSMLSFT, OSMLCTL,          OSMRALT, SPC_SFT, MO(_MISC)
   ),
   //CAD mode: (a mostly transparent layer, but will activate extra combos)
   [_CAD] = LAYOUT_split_3x5_3(
 	  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______,
 	  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______,
 	  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______,
+						_______, SPC_SFT, _______,          _______, _______, _______
 						_______, SPC_SFT, _______,          _______, _______, _______
   ),
   //Numbers and symbols:
@@ -90,11 +91,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	  KC_LCBR, KC_LPRN, KC_RPRN, KC_RCBR, KC_GRV,           KC_PLUS, KC_4,    KC_5,    KC_6,    KC_MINS,
 	  KC_LBRC, KC_LT,   KC_GT,   KC_RBRC, KC_HASH,          KC_ASTR, KC_1,    KC_2,    KC_3,    KC_SLSH,
 						_______, UND_SFT, _______,          EQL_RLT, KC_0,    DOTCOMM
+						_______, UND_SFT, _______,          EQL_RLT, KC_0,    DOTCOMM
   ),
   [_RNUM] = LAYOUT_split_3x5_3(
 	  _______, _______, _______, _______, _______,          KC_CIRC, KC_7,    KC_8,    KC_9,    KC_PERC,
 	  _______, _______, _______, _______, _______,          KC_PLUS, KC_4,    KC_5,    KC_6,    KC_MINS,
 	  _______, _______, _______, _______, _______,          KC_ASTR, KC_1,    KC_2,    KC_3,    KC_SLSH,
+						_______, _______, _______,          EQL_RLT, KC_0,    DOTCOMM
 						_______, _______, _______,          EQL_RLT, KC_0,    DOTCOMM
   ),
   //OTHER:
@@ -102,6 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	  QK_BOOT, XXXXXXX, EE_CLR,  XXXXXXX, XXXXXXX,          KC_PGUP, KC_BRIU, KC_INS,  KC_VOLU, KC_PSCR,
 	  XXXXXXX, KC_SCRL, XXXXXXX, XXXXXXX, XXXXXXX,          KC_PGDN, KC_BRID, XXXXXXX, KC_VOLD, XXXXXXX,
 	  XXXXXXX, XXXXXXX, KC_CAPS, XXXXXXX, KC_BRK,           KC_NUM,  KC_MENU, XXXXXXX, KC_MUTE, XXXXXXX,
+						XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX
 						XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX
   ),
     // clang-format on
