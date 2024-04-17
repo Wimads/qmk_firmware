@@ -17,7 +17,7 @@
 #define CAPS_WORD_IDLE_TIMEOUT 0
 
 // Oneshot:
-#define ONESHOT_TIMEOUT 5000
+#define ONESHOT_TIMEOUT 700
 
 ////HARDWARE CONFIG////
 #undef EE_HANDS     // automatic detection of master/slave doesn't work, so undefine
