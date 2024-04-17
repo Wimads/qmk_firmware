@@ -8,31 +8,25 @@ COMB(CAD_CWTG,      CW_TOGG,        KC_Z, KC_C)
 COMB(CADrQTY,       CADTOGG,        KC_PLUS, KC_MINS)
 COMB(CAD_QTY,       CADTOGG,        ADK_A, KC_G)
 
-////MODIFIERS///
-COMB(CAD_CS,        C(KC_LSFT),     SPC_SFT, KC_LCTL)
-COMB(CAD_AS,        A(KC_LSFT),     SPC_SFT, KC_LALT)
-
-COMB(CAD_MEH,       KC_MEH,         SPC_SFT, KC_LCTL, KC_LALT)
-
 ////SYMBOLS////
-COMB(CAD_AT,        KC_AT,          KC_LCTL, KC_Q)
-COMB(CAD_DLR,       KC_DLR,         KC_LCTL, KC_W)
-COMB(CAD_AMPR,      KC_AMPR,        KC_LCTL, ADK_E)
-COMB(CAD_PIPE,      KC_PIPE,        KC_LCTL, KC_R)
-COMB(CAD_TILD,      KC_TILD,        KC_LCTL, KC_T)
-COMB(CAD_LCBR,      KC_LCBR,        KC_LCTL, ADK_A)
-COMB(CAD_LPRN,      KC_LPRN,        KC_LCTL, KC_S)
-COMB(CAD_RPRN,      KC_RPRN,        KC_LCTL, KC_D)
-COMB(CAD_RCBR,      KC_RCBR,        KC_LCTL, FFF_NUM)
-COMB(CAD_GRV,       KC_GRV,         KC_LCTL, KC_G)
-COMB(CAD_LBRC,      KC_LBRC,        KC_LCTL, KC_Z)
-COMB(CAD_LT,        KC_LT,          KC_LCTL, KC_X)
-COMB(CAD_GT,        KC_GT,          KC_LCTL, KC_C)
-COMB(CAD_RBRC,      KC_RBRC,        KC_LCTL, KC_V)
-COMB(CAD_HASH,      KC_HASH,        KC_LCTL, KC_B)
-COMB(CAD_UNDS,      KC_UNDS,        KC_LCTL, KC_X, KC_V)
-COMB(CADsEQL,       KC_EQL,         KC_LCTL, KC_C, KC_V) //useful for <= =>
-COMB(CADsMINS,      KC_MINS,        KC_LCTL, KC_X, KC_C) //useful for <- ->
+COMB(CAD_AT,        KC_AT,          OSMLCTL, KC_Q)
+COMB(CAD_DLR,       KC_DLR,         OSMLCTL, KC_W)
+COMB(CAD_AMPR,      KC_AMPR,        OSMLCTL, ADK_E)
+COMB(CAD_PIPE,      KC_PIPE,        OSMLCTL, KC_R)
+COMB(CAD_TILD,      KC_TILD,        OSMLCTL, KC_T)
+COMB(CAD_LCBR,      KC_LCBR,        OSMLCTL, ADK_A)
+COMB(CAD_LPRN,      KC_LPRN,        OSMLCTL, KC_S)
+COMB(CAD_RPRN,      KC_RPRN,        OSMLCTL, KC_D)
+COMB(CAD_RCBR,      KC_RCBR,        OSMLCTL, FFF_NUM)
+COMB(CAD_GRV,       KC_GRV,         OSMLCTL, KC_G)
+COMB(CAD_LBRC,      KC_LBRC,        OSMLCTL, KC_Z)
+COMB(CAD_LT,        KC_LT,          OSMLCTL, KC_X)
+COMB(CAD_GT,        KC_GT,          OSMLCTL, KC_C)
+COMB(CAD_RBRC,      KC_RBRC,        OSMLCTL, KC_V)
+COMB(CAD_HASH,      KC_HASH,        OSMLCTL, KC_B)
+COMB(CAD_UNDS,      KC_UNDS,        OSMLCTL, KC_X, KC_V)
+COMB(CADsEQL,       KC_EQL,         OSMLCTL, KC_C, KC_V) //useful for <= =>
+COMB(CADsMINS,      KC_MINS,        OSMLCTL, KC_X, KC_C) //useful for <- ->
 
 ////NUMBERS////
 COMB(CAD_PERC,      KC_PERC,        SPC_SFT, KC_Q)
