@@ -13,6 +13,8 @@ This is my personal keymap, which is optimized for CAD and graphic usage on a 3x
 
 ## 1 | Base layout
 ### Alphas (modified QWERTY):
+![Default layer](<_DEF layer.png>)
+
 The base layout for this keymap is QWERTY, with some slight modifications to the symbol/punctuation keys (adding some logic to it rather than the randomness of traditional QWERTY symbols).
 The basic logic behind this modification was to make a clear distinction between *punctuation* and *symbols*. 
 
@@ -38,15 +40,33 @@ My approach for basically all keys that didn't find a spot on a dedicated key, i
 
 For combos it is important to consider whether they impact regular typing (similar to how homerow mods can be a challenge to dial in). To avoid problems, I basically avoid any combos with 2 adjacent keys on common rolls and bigrams (except in CAD mode, but that will be covered later on).
 
-The image below shows the most important combos I use for the default layer (scroll to end if you want to see the full amount of combos I use). `escape` `tab` and `enter` are on the center 3 keys, which are very convenient to press in regular typing without much risk of misfires. `backspace` and `delete` are on the index columns, which also have become a pretty natural reflex in typing. I have kept these symmetrical (both left and right hand have them), which is convenient for one handed use (and lazy browsing).
+![Most important combos](<_DEF main combos.png>)
+
+The image above shows the most important combos I use for the default layer. `escape` `tab` and `enter` are on the center 3 keys, which are very convenient to press in regular typing without much risk of misfires. `backspace` and `delete` are on the index columns, which also have become a pretty natural reflex in typing. I have kept these symmetrical (both left and right hand have them), which is convenient for one handed use (and lazy browsing).
+
+The above image was just for clarity, but far from complete. Visualizing a lot of combos is a bit of a challenge, but below an attempt to show a more complete overview (and even more will follow down below):
+
+![Default layer combos](<_DEF combos.png>)
+
+
+### Accented characters (ãàáäâ):
+Dutch uses some (infrequent) accented characters, ë being most common. On a traditional keyboard with Dutch language settings, these keys are accessed through dead keys, which I do not find convenient. Hence I've made my own method, modifying the standard dead key behaviour to my own needs. 
+
+Basically, I've made it such that holding `e` and then tapping `.` results in `ë`; tap different keys for different diacritics. The same works for all vowels. The image below shows which keys to tap for which diacritics, taking `a` as an example:
+
+![Accented characters](<_DEF accented.png>)
 
 ### Navigation keys (vertical combos):
 I use vertical combos for arrow keys, which are also pretty convenient to have available on the default layer. Though, how convenient vertical combos are really depends on your keyboard and keycaps. I use a choc spaced board with Chicago Steno keycaps, which allows for reasonably conveniently pressing a vertical combo with a single finger between two keys.
 
+![Mouse and navigation combos](<_DEF combos mouse nav.png>)
+
 ### Mouse buttons (combos):
-Since I am using this keyboard in conjunction with my own QMK  trackball device (Look for TB3S in my github repos), I also added combos for mouse buttons on my keyboard. I very much enjoy operating the trackball with my right hand (finger ball), and clicking with my left hand on the keyboard. 
+Since I am using this keyboard in conjunction with my own QMK  trackball device (Look for TB3S in my github repos), I also added combos for mouse buttons on my keyboard. I very much enjoy operating the trackball with my right hand (finger ball), and clicking with my left hand on the keyboard. There is no mouse button combos on the right half, because my trackball device has it's own buttons.
 
 ## 2 | Numpad and symbols
+![Numpad and symbols layer](<_NUM layer.png>)
+
 ### Numpad:
 I have arranged my `_NUM` layer with a numpad layout on the right side, which also has the symbols that relate to math `= * / + - ^` as well as `%` because it kind of made sense to have that on `P` position. The numpad also has a special `DOTCOMM` key, which acts as `DOT` or `COMMA` depending on its state - double tapping swaps its state - which is convenient when swapping between Dutch notation (using comma for decimals) or US notation (dot for decimals). In either state, it results in opposite when shifted (so shift+dot becomes comma when its in US state).
 
@@ -59,15 +79,21 @@ On the left hand side I have put all the symbols that relate to programming. All
 
 For convenience, I also added combos for `-` and `=` on `<>` and `>]` repsectively, so its convenient to type `->` and `<=` and the like (which would otherwise have been on left and right hand; and since I'm using `F` and `J` as `_NUM` layer mods, that'd mean having to twice activate and release the layer with each mod).
 
+![alt text](<_NUM combos.png>)
+
 ### F-keys (combos):
 F-keys are actually accessible through the default layer via combos, but I'm mentioning them here since they are positioned according to the Numpad layout. Basically I use a combo of tucky thumb key `MO(_MISC)` on default layer, with a key corresponding to a number on the numpad. So combo `MO(_MISC)`+`J`=`F4` (J corresponds with 4 on the numpad layer). Same for all other F keys, and F10-F12 are on the pinky column. For convenience I have also mirrored these combos to the left hand side (combo with `LALT`), which is useful in one handed use (like in CAD with right hand on mouse/trackball).
 
+![F-key combos](<_NUM combos F-keys.png>)
+
 ## 3 | Miscelaneous layer
+![Miscelaneous layer](<_MISC layer.png>)
+
 Not much to be said here, all keys that didn't fit on default or numpad layer, and didn't warrant a dedicated combo, are on the `_MISC` layer. That is keys like `printscreen` and `insert`, but also volume and screen brightness. 
 
 ## 4 | CAD mode
-CAD mode is technically an extra layer in my keymap file, although it is basically fully transparent (it only changes `KC_LSFT` to `LSFT_T(KC_SPC)`). However, the main trick about this layer is that it activates an additional set of combos that enables one handed operation. It makes nearly all keys accesible through the left hand via combos. This is useful for CAD usage, so you can keep your right hand on the mouse / trackball, while typing shortcuts, commands, numbers, etc. with the left hand. As you can imagine though, this requires a ***lot*** of combos, which would make regular typing unworkable. Hence, the CAD mode layer exists to activate/deactivate those combos on demand.
+![CAD mode combos](<_CAD combos.png>)
 
-Why combos and not the QMK swap-hands feature? Well, I just find combos more convenient than holding down a modifier to swap hands; it allows for more flexibility, and it also allows for building muscle memory a lot better than a modifier. This approach was actually inspired by the TAIPO layout (a 10 key chording layout, google it if you don't know it yet, its pretty cool) - I did experiment with TAIPO for a bit, and I found the chording approach very effective for single handed use. 
+CAD mode is technically an extra layer in my keymap file, although it is basically fully transparent (it only changes `shift` to a mod-tap of `shift` and `space`). However, the main trick about this layer is that it activates an additional set of combos that enables one handed operation. It makes nearly all keys accesible through the left hand via combos. This is useful for CAD usage, so you can keep your right hand on the mouse / trackball, while typing shortcuts, commands, numbers, etc. with the left hand. As you can imagine though, this requires a ***lot*** of combos, which would make regular typing unworkable. Hence, the CAD mode layer exists to activate/deactivate those combos on demand.
 
-Visualizing so many combos is a bit of a challenge, but the images below are an attempt to cover all of them (not just CAD mode). 
+Why combos and not the QMK swap-hands feature? Well, I just find combos more convenient than holding down a modifier to swap hands; it allows for more flexibility, and it also allows for building muscle memory a lot better than a modifier. This approach was actually inspired by the TAIPO layout (a 10 key chording layout, google it if you don't know it yet, its pretty cool) - I did experiment with TAIPO for a bit, and I found the chording approach very effective for single handed use.
