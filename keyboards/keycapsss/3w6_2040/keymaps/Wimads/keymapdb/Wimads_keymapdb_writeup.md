@@ -72,14 +72,14 @@ I have arranged my `_NUM` layer with a numpad layout on the right side, which al
 
 The `TAB` and `ENTER` combos also work on the numlayer, but `ENTER` becomes `NUMPAD_ENTER` (some softwares have different functions for either enter key).
 
-I also have a combo (`J` + `'"`) for locking only the right half of the numpad layer (so only the numpad, left hand is still qwerty, useful in CAD mode discussed below).
+I also have a combo (`J` + `'"`) for locking only the right half of the numpad layer (so only the numpad, left hand is still qwerty, which is useful in CAD mode discussed down below).
+
+![alt text](<_NUM combos.png>)
 
 ### Symbols:
 On the left hand side I have put all the symbols that relate to programming. All brackets are conveniently together. And all other keys are positioned such that they link to a QWERTY key --> `@` is above `A`; `$` is above `S`; `&` (et) is on `E`; `|` (oR) is next to `&` (and/or) and also on `R`; `~` (tilde) is on `T`; `` ` `` (grave) is on `G`; and then just `_` and `#` are left on the remaining keys. And lastly there is some custom shifted characters: `\` is on `shift+/`; and `€` is on `shift+$`. In other words, basically all symbols are in a logical easy to remember place, which is especially useful for symbols that you don't use very frequently and thus don't develop muscle memory for very quickly either.
 
 For convenience, I also added combos for `-` and `=` on `<>` and `>]` repsectively, so its convenient to type `->` and `<=` and the like (which would otherwise have been on left and right hand; and since I'm using `F` and `J` as `_NUM` layer mods, that'd mean having to twice activate and release the layer with each mod).
-
-![alt text](<_NUM combos.png>)
 
 ### F-keys (combos):
 F-keys are actually accessible through the default layer via combos, but I'm mentioning them here since they are positioned according to the Numpad layout. Basically I use a combo of tucky thumb key `MO(_MISC)` on default layer, with a key corresponding to a number on the numpad. So combo `MO(_MISC)`+`J`=`F4` (J corresponds with 4 on the numpad layer). Same for all other F keys, and F10-F12 are on the pinky column. For convenience I have also mirrored these combos to the left hand side (combo with `LALT`), which is useful in one handed use (like in CAD with right hand on mouse/trackball).
