@@ -29,7 +29,9 @@ void keyboard_post_init_user(void) {
 };
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+#ifdef MACCEL_ENABLE
     return pointing_device_task_maccel(mouse_report);
+#endif
 };
 
 ////LAYER & KEYCODE DEFINITIONS////
