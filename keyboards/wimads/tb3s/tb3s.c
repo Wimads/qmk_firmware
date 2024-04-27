@@ -45,10 +45,10 @@
 typedef union {
     uint16_t raw;
     struct {
-        uint8_t pointer_default_dpi : 7; // 16 steps available.
-        uint8_t pointer_sniping_dpi : 1; // 4 steps available.
-        bool    is_dragscroll_enabled : 1;
-        bool    is_sniping_enabled : 1;
+        uint16_t pointer_default_dpi : 10; // 16 steps available.
+        uint16_t pointer_sniping_dpi : 1;  // 4 steps available.
+        bool     is_dragscroll_enabled : 1;
+        bool     is_sniping_enabled : 1;
     } __attribute__((packed));
 } charybdis_config_t;
 

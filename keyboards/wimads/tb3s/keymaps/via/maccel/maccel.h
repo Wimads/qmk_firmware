@@ -1,26 +1,14 @@
-/* Copyright 2024 burkfers (@burkfers)
- * Copyright 2024 Wimads (@wimads)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright 2024 burkfers (@burkfers)
+// Copyright 2024 Wimads (@wimads)
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 #pragma once
 
 #include "action.h"
 #include "report.h"
 
 report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report);
-bool           process_record_maccel(uint16_t keycode, keyrecord_t *record, uint16_t takeoff, uint16_t growth_rate, uint16_t offset, uint16_t limit);
+bool           process_record_maccel(uint16_t keycode, keyrecord_t *record, uint16_t toggle, uint16_t takeoff, uint16_t growth_rate, uint16_t offset, uint16_t limit);
 
 typedef struct _maccel_config_t {
     float growth_rate;
