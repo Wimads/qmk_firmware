@@ -18,7 +18,7 @@ static uint32_t maccel_timer;
 #    define MACCEL_OFFSET 1.7 // lower/higher value = acceleration kicks in earlier/later
 #endif
 #ifndef MACCEL_LIMIT
-#    define MACCEL_LIMIT 0.18 // lower limit of accel curve (minimum acceleration factor)
+#    define MACCEL_LIMIT 0.2 // lower limit of accel curve (minimum acceleration factor)
 #endif
 #ifndef MACCEL_CPI_THROTTLE_MS
 #    define MACCEL_CPI_THROTTLE_MS 200 // milliseconds to wait between requesting the device's current DPI

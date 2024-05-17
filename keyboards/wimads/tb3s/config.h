@@ -29,6 +29,8 @@
 #undef POINTING_DEVICE_TASK_THROTTLE_MS
 #define POINTING_DEVICE_TASK_THROTTLE_MS 5 // to tame the buffer-less dragscroll a bit
 
+// #define DEBUG_MATRIX_SCAN_RATE
+
 /* PMW3360 Settings */
 #define PMW33XX_LIFTOFF_DISTANCE 0x00
 #define PMW33XX_CS_PIN GP5
