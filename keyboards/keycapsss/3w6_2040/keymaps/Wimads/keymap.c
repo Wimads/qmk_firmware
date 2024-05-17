@@ -216,7 +216,8 @@ typedef struct _multifunc_keycode_t { // define multifunc keycode functions
     uint16_t kc_deadkey;              // alternate keycode on auto_dead_key
 } multifunc_keycode_t;
 // clang-format off
-multifunc_keycode_t multifunc_map[12] = { // specify number of multifunc_keycodes in map [#]
+#define MULTIFUNC_COUNT 12 // specify number of multifunc keycodes
+multifunc_keycode_t multifunc_map[MULTIFUNC_COUNT] = {
     // _DEF layer left:
 //  {kc_record, kc_shifted, kc_deadkey}, //00  r S d
     {KC_Z,      S(KC_Z),    S(KC_CIRC)}, //01  z Z ^
