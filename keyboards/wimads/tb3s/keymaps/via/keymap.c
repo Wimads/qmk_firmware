@@ -82,9 +82,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
                 dragscroll = true;
                 charybdis_set_pointer_dragscroll_enabled(dragscroll);
             } else if (record->event.pressed && drag_toggle) {
-                // on hold and toggled (ie. tap once and then hold): turn dragscroll off
+                // on hold and toggled (ie. tap once and then hold): turn drag_toggle off
                 drag_toggle = false;
-                dragscroll  = false;
+                dragscroll  = true;
                 charybdis_set_pointer_dragscroll_enabled(dragscroll);
             } else {
                 // on release:
