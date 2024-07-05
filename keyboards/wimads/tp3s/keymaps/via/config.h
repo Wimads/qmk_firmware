@@ -16,24 +16,12 @@
 
 #pragma once
 
-/* Pointer Config */
-#define ROTATIONAL_TRANSFORM_ANGLE -90
-#define POINTING_DEVICE_INVERT_Y
-#define CHARYBDIS_DRAGSCROLL_REVERSE_Y
+// combos
+#define COMBO_VARIABLE_LEN
+#define COMBO_TERM 60
 
-#define MOUSE_EXTENDED_REPORT
+#define EECONFIG_USER_DATA_SIZE 20
 
-#define CHARYBDIS_MINIMUM_DEFAULT_DPI 1000
-#define CHARYBDIS_DRAGSCROLL_DPI 300
-
-#undef POINTING_DEVICE_TASK_THROTTLE_MS
-#define POINTING_DEVICE_TASK_THROTTLE_MS 5 // to tame the buffer-less dragscroll a bit
-
-// #define DEBUG_MATRIX_SCAN_RATE
-
-/* Hardware Config */
-#define PMW33XX_LIFTOFF_DISTANCE 0x00
-#define PMW33XX_CS_PIN GP5
-#define SPI_SCK_PIN GP2
-#define SPI_MISO_PIN GP0
-#define SPI_MOSI_PIN GP7
+#define MACCEL_DEBUG // enable debug console
+#undef PRINTF_SUPPORT_DECIMAL_SPECIFIERS
+#define PRINTF_SUPPORT_DECIMAL_SPECIFIERS 1 // enable floats in debug console

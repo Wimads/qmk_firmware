@@ -68,5 +68,7 @@
     "editor.inlayHints.enabled": "off",
     "editor.suggest.showValues": false,
     "editor.suggest.showOperators": false,
-    "editor.acceptSuggestionOnEnter": "off"
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.fontFamily": "Consola mono, 'Courier New', monospace",
+    "editor.fontSize": 13
 }

@@ -1,4 +1,5 @@
 /*TO DO
+ * Fix Oneshot-ish-mods: don't cancel oneshot when pressing multiple hot keys (ctrl+shift+a ..+c)
  * implement dragscroll trigger via numlock
  * get into lighting layers to fix capsword led animation
  */
@@ -326,12 +327,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     //  dotcomm key
     static bool dotcomm_state = true; // true = dot; false = comma;
     //  Auto dead keys
-    static uint16_t adk_record    = KC_SPC; // keycode to send after dead key (defined in multifunc keycodes)
-    static uint16_t adk_active    = false;  // active status of auto_dead_key macro
-    static uint16_t adk_mod_shift = 0;      // track shift state for auto_dead_key
+    static uint16_t adk_record = KC_SPC; // keycode to send after dead key (defined in multifunc keycodes)
+    // static uint16_t adk_active    = false;  // active status of auto_dead_key macro
+    static uint16_t adk_mod_shift = 0; // track shift state for auto_dead_key
+    //  layer tap
+    static bool hold_active = false; // active status of layer tap keys
 
     // ONESHOT-ISH-MODS:
-    switch /* !! NO MACROS IN THIS SWITCH !! */ (keycode) {
+    switch /* !! PUT NO MACROS IN THIS SWITCH !! */ (keycode) {
+        /* Oneshot-ish-mods:
+         *  Function as oneshot mods when followed by another mod
+         *  Function as regular mods when followed by non-modifier (for example an alpha key)
+         *  Effectively allows to stack mods by consecutively tapping them, without messing with regular mod behaviour for everything else.
+         */
         // on modifier keypress:
         case KC_LCTL ... KC_RGUI: // clang-format off
         case OSMLCTL: case OSMLSFT: case OSMLALT: case OSMLGUI:
@@ -356,6 +364,44 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 
     } //..switch(keycode) oneshot-ish-mods
+
+    // HOLD-FAIL-RELEASE:
+    switch /* !! PUT NO MACROS IN THIS SWITCH !! */ (keycode) {
+            // clang-format off
+        /* On HOLD-FAIL-RELEASE execute TAP instead. (applies to tap-hold keys only)
+         * Example:
+         *  HOLD down LT(layer,tapcode) to activate layer
+         *  FAIL to press any key on layer
+         *  RELEASE the LT key, now tapcode is executed instead. (usually, no keycode would be executed at all)
+         */
+
+        // on listed TAP-HOLD keys:
+        case SPCLSFT: case SPCRSFT: case UNDLSFT:
+        case ADK_A:   case ADK_E:   case ADK_U:
+        case ADK_I:   case ADK_O:   case ADK_N: // clang-format on
+            if (record->event.pressed && !record->tap.count) {
+                // ON HOLD:
+                hold_active = true;
+            } else if (record->event.pressed) {
+                // ON TAP:
+                if (hold_active) { // condition necessary to allow nested HOLD-FAIL-RELEASE sequences
+                    hold_active = false;
+                }
+            } else {
+                // ON RELEASE:
+                if (hold_active) {
+                    tap_code16(keycode);
+                    hold_active = false;
+                }
+            }
+            break;
+        // on NON-TAP-HOLD keys:
+        default:
+            if (record->event.pressed && hold_active) {
+                hold_active = false;
+            }
+            break;
+    } // ..switch(keycode) lt keys
 
     // MACROS:
     switch (keycode) {
@@ -441,12 +487,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case ADK_I: case ADK_O: case ADK_N: // clang-format on
             if (record->event.pressed && record->tap.count) {
                 // ON TAP:
-                if (mutifunc_index == -1 || !adk_active) { // check for multifunc keycode and adk state to avoid conflict with multifunc keycodes
+                if (mutifunc_index == -1 || adk_record == KC_SPC) { // check for multifunc keycode and adk state to avoid conflict with multifunc keycodes
                     return true;
                 }
             } else if (record->event.pressed) {
                 // ON HOLD:
-                adk_active = true;    // update auto_dead_key active status
+                // adk_active = true;    // update auto_dead_key active status
                 adk_record = keycode; // store keycode in auto_dead_key record
                 if (is_caps_word_on()) {
                     adk_mod_shift = MOD_MASK_SHIFT; // store shift state of auto_dead_key
@@ -456,12 +502,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false; // don't return keycode
             } else {
                 // ON RELEASE:
-                if (adk_active) {
+                /*if (adk_active) {
                     // if adk still active on key release, that means adk-macro wasn't executed
                     // in which case execute TAP action instead:
                     tap_code16(keycode); // TAP action
                     adk_active = false;  // update auto_dead_key active status
-                }
+                }*/
                 adk_record = KC_SPC; // reset auto_dead_key record
                 return true;
             }
@@ -476,14 +522,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(adk_record);                          // tap auto_dead_key (KC_SPC if no ADK_ keycode was held)
                 unregister_mods(adk_mod_shift);                  // unregister auto_dead_key shift state
                 register_mods(mod_shift);                        // re-register shift (if it was pressed)
-                adk_active = false;                              // update auto_dead_key active status
-                return false;                                    // ignore default key behavior
+                // adk_active = false;                              // update auto_dead_key active status
+                hold_active = false;
+                return false; // ignore default key behavior
             }
 
         default:
             if (mutifunc_index != -1) {
                 // if multifunc key was pressed:
-                if (record->event.pressed && adk_active) {
+                if (record->event.pressed && adk_record != KC_SPC) {
                     // if auto_dead_key is active:
                     unregister_mods(mod_shift);                           // unregister shift (if it was pressed)
                     tap_code16(multifunc_map[mutifunc_index].kc_deadkey); // tap dead key
@@ -491,8 +538,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(adk_record);                               // tap auto_dead_key (KC_SPC if no ADK_ keycode w
                     unregister_mods(adk_mod_shift);                       // unregister auto_dead_key shift state
                     register_mods(mod_shift);                             // re-register shift (if it was pressed)
-                    adk_active = false;                                   // update auto_dead_key active status
-                    return false;                                         // ignore default key behaviour
+                    // adk_active = false;                                   // update auto_dead_key active status
+                    hold_active = false;
+                    return false; // ignore default key behaviour
                 } else if (record->event.pressed && mod_shift) {
                     // if shift is pressed:
                     unregister_mods(mod_shift);                           // unregister shift
