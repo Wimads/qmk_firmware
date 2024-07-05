@@ -16,12 +16,6 @@ enum layers {
     _NUM  = 3, // NUMbers and symbols
     _RNUM = 4, // NUMpad Right hand only
     _MISC = 9, // MISCelaneous;
-    _QTY  = 0, // QwerTY
-    _QTYe = 1, // Qwerty for monkytype emulation
-    _CAD  = 2, // CAD mode
-    _NUM  = 3, // NUMbers and symbols
-    _RNUM = 4, // NUMpad Right hand only
-    _MISC = 9, // MISCelaneous;
 };
 
 /// Custom keycodes..
@@ -136,10 +130,6 @@ void matrix_init_user(void) {
     rgblight_enable();
     rgblight_mode(rgb_mode);                    // set light effect for both LEDs
     rgblight_sethsv(rgb_hue, rgb_sat, rgb_val); // set HSV value for both LEDs
-    // initiate rgb underglow (default mode as per ASW_on true):
-    rgblight_enable();
-    rgblight_mode(rgb_mode);                    // set light effect for both LEDs
-    rgblight_sethsv(rgb_hue, rgb_sat, rgb_val); // set HSV value for both LEDs
 };
 
 // Capsword indicator:
@@ -157,23 +147,7 @@ void caps_word_set_user(bool active) {
         rgblight_mode(rgb_mode);
         rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
         if (IS_LAYER_ON(_RNUM)) {
-    if (active) {
-        rgb_mode = 2;
-        rgblight_mode(rgb_mode);
-        if (IS_LAYER_ON(_RNUM)) {
-            rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val); // override both LEDs, since can't override one when mode = 2;
-        } else {
-            rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
-        }
-    } else {
-        rgb_mode = 1;
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
-        if (IS_LAYER_ON(_RNUM)) {
             rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val);
-            rgblight_sethsv_at(rgb_hue, rgb_sat, rgb_val, 0);
-        }
-    }
             rgblight_sethsv_at(rgb_hue, rgb_sat, rgb_val, 0);
         }
     }
@@ -181,40 +155,6 @@ void caps_word_set_user(bool active) {
 
 // Layer indicators:
 layer_state_t layer_state_set_user(layer_state_t state) {
-    if (IS_LAYER_ON_STATE(state, _RNUM) && is_caps_word_on()) {
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val); // override both LEDs, since can't override one when mode = 2;
-    } else if (IS_LAYER_ON_STATE(state, _RNUM)) {
-        if (IS_LAYER_ON_STATE(state, _MISC)) {
-            rgb_hue = rgb_hue_m;
-        } else if (IS_LAYER_ON_STATE(state, _NUM)) {
-            rgb_hue = rgb_hue_n;
-        } else if (IS_LAYER_ON_STATE(state, _CAD)) {
-            rgb_hue = rgb_hue_c;
-        } else if (IS_LAYER_ON_STATE(state, _QTYe)) {
-            rgb_hue = rgb_hue_e;
-        } else {
-            rgb_hue = rgb_hue_q;
-        }
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val);
-        rgblight_sethsv_at(rgb_hue, rgb_sat, rgb_val, 0);
-    } else {
-        if (IS_LAYER_ON_STATE(state, _MISC)) {
-            rgb_hue = rgb_hue_m;
-        } else if (IS_LAYER_ON_STATE(state, _NUM)) {
-            rgb_hue = rgb_hue_n;
-        } else if (IS_LAYER_ON_STATE(state, _CAD)) {
-            rgb_hue = rgb_hue_c;
-        } else if (IS_LAYER_ON_STATE(state, _QTYe)) {
-            rgb_hue = rgb_hue_e;
-        } else {
-            rgb_hue = rgb_hue_q;
-        }
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
-    }
-    return state;
     if (IS_LAYER_ON_STATE(state, _RNUM) && is_caps_word_on()) {
         rgblight_mode(rgb_mode);
         rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val); // override both LEDs, since can't override one when mode = 2;
@@ -262,17 +202,8 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
             return true;
     }
     return true;
-    switch (combo_index) {
-        case CAD_START ... CAD_FINAL:
-            if (!IS_LAYER_ON(_CAD)) {
-                return false;
-            }
-            return true;
-    }
-    return true;
 };
 
-// Tap-hold per key config:
 // Tap-hold per key config:
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -328,7 +259,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static bool dotcomm_state = true; // true = dot; false = comma;
     //  Auto dead keys
     static uint16_t adk_record = KC_SPC; // keycode to send after dead key (defined in multifunc keycodes)
-    // static uint16_t adk_active    = false;  // active status of auto_dead_key macro
     static uint16_t adk_mod_shift = 0; // track shift state for auto_dead_key
     //  layer tap
     static bool hold_active = false; // active status of layer tap keys
