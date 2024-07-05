@@ -44,8 +44,6 @@ enum custom_keycodes {
 
 #include "g/keymap_combo.h" //include combo dictionary after custom keycodes, so custom keycodes can be used in combos.def
 
-#include "g/keymap_combo.h" //include combo dictionary after custom keycodes, so custom keycodes can be used in combos.def
-
 // Keymaps:
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QAI] = LAYOUT_Wimads(                                                                                                                                                                                                                                                                // default layer

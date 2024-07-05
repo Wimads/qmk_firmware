@@ -8,7 +8,6 @@
 
 ////DEFINITIONS////
 // Layers:
-// Layers:
 enum layers {
     _QTY  = 0, // QwerTY
     _QTYe = 1, // Qwerty for monkytype emulation
@@ -98,7 +97,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	  QK_BOOT, XXXXXXX, EE_CLR,  XXXXXXX, XXXXXXX,          KC_PGUP, KC_BRIU, KC_INS,  KC_VOLU, KC_PSCR,
 	  XXXXXXX, KC_SCRL, XXXXXXX, XXXXXXX, XXXXXXX,          KC_PGDN, KC_BRID, XXXXXXX, KC_VOLD, XXXXXXX,
 	  XXXXXXX, XXXXXXX, KC_CAPS, XXXXXXX, KC_BRK,           KC_NUM,  KC_MENU, XXXXXXX, KC_MUTE, XXXXXXX,
-						XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX
 						XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX
   ),
     // clang-format on
@@ -259,6 +257,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static bool dotcomm_state = true; // true = dot; false = comma;
     //  Auto dead keys
     static uint16_t adk_record = KC_SPC; // keycode to send after dead key (defined in multifunc keycodes)
+    // static uint16_t adk_active    = false;  // active status of auto_dead_key macro
     static uint16_t adk_mod_shift = 0; // track shift state for auto_dead_key
     //  layer tap
     static bool hold_active = false; // active status of layer tap keys
