@@ -256,9 +256,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     //  dotcomm key
     static bool dotcomm_state = true; // true = dot; false = comma;
     //  Auto dead keys
-    static uint16_t adk_record = KC_SPC; // keycode to send after dead key (defined in multifunc keycodes)
-    // static uint16_t adk_active    = false;  // active status of auto_dead_key macro
-    static uint16_t adk_mod_shift = 0; // track shift state for auto_dead_key
+    static uint16_t adk_record    = KC_SPC; // keycode to send after dead key (defined in multifunc keycodes)
+    static uint16_t adk_mod_shift = 0;      // track shift state for auto_dead_key
     //  layer tap
     static bool hold_active = false; // active status of layer tap keys
 
