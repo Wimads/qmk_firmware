@@ -16,6 +16,11 @@
 
 #pragma once
 
+/* Pointer Config */
+#define ROTATIONAL_TRANSFORM_ANGLE -90
+#define POINTING_DEVICE_INVERT_Y
+#define CHARYBDIS_DRAGSCROLL_REVERSE_Y
+
 // combos
 #define COMBO_VARIABLE_LEN
 #define COMBO_TERM 60

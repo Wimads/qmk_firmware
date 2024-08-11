@@ -1,0 +1,4 @@
+COMB(DEF_MMB,   MMB,        LMB, RMB)      // _ X X
+COMB(DEF_FWD,   FWD,        RMB, DRTGSCR)      // X X _
+COMB(DEF_BCK,   BCK,        DRTGSCR, LMB)          // X _ X
+COMB(DEF_RST,   RST_QMK,    RMB, LMB, DRTGSCR) // X X X
