@@ -45,9 +45,9 @@
 
 /* Cirque trackpad over SPI. */
 #define SPI_DRIVER SPID1
-#define SPI_SCK_PIN GP14 // SP1
-#define SPI_MOSI_PIN GP15 // SP1
-#define SPI_MISO_PIN GP12 // SP1
+#define SPI_SCK_PIN GP14            // SP1
+#define SPI_MOSI_PIN GP15           // SP1
+#define SPI_MISO_PIN GP12           // SP1
 #define POINTING_DEVICE_CS_PIN GP13 // SP1
 #undef CIRQUE_PINNACLE_DIAMETER_MM
 #define CIRQUE_PINNACLE_DIAMETER_MM 40

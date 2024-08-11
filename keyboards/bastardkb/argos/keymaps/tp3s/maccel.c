@@ -9,13 +9,13 @@
 static uint32_t maccel_timer;
 
 #ifndef MACCEL_TAKEOFF
-#    define MACCEL_TAKEOFF 2.0 // lower/higher value = curve starts more smoothly/abruptly
+#    define MACCEL_TAKEOFF 1.9 // lower/higher value = curve starts more smoothly/abruptly
 #endif
 #ifndef MACCEL_GROWTH_RATE
 #    define MACCEL_GROWTH_RATE 0.25 // lower/higher value = curve reaches its upper limit slower/faster
 #endif
 #ifndef MACCEL_OFFSET
-#    define MACCEL_OFFSET 2.2 // lower/higher value = acceleration kicks in earlier/later
+#    define MACCEL_OFFSET 1.7 // lower/higher value = acceleration kicks in earlier/later
 #endif
 #ifndef MACCEL_LIMIT
 #    define MACCEL_LIMIT 0.2 // lower limit of accel curve (minimum acceleration factor)
@@ -103,7 +103,7 @@ void maccel_toggle_enabled(void) {
 #define CONSTRAIN_REPORT(val) (mouse_xy_report_t) _CONSTRAIN(val, XY_REPORT_MIN, XY_REPORT_MAX)
 
 report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
-    //dprintf("finger: %i\n", pointing_device_is_touch_down());
+    // dprintf("finger: %i\n", pointing_device_is_touch_down());
 
     // rounding carry to recycle dropped floats from int mouse reports, to smoothen low speed movements (credit @ankostis)
     static float rounding_carry_x = 0;
@@ -139,12 +139,11 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
     // correct raw velocity for dpi
     // const float velocity = dpi_correction * velocity_raw;
 
-
     bool finger_present = pointing_device_is_touch_down();
 
-    static float velocity         = 0;
-    static float velocity_carry   = 0;
-    const float  glide_decel_rate = 0.1;
+    static float             velocity         = 0;
+    static float             velocity_carry   = 0;
+    const float              glide_decel_rate = 1;
     static mouse_xy_report_t prevx;
     static mouse_xy_report_t prevy;
 
@@ -159,7 +158,8 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
         // glide cursor movement
         velocity       = velocity_carry - glide_decel_rate;
         velocity_carry = velocity;
-        mouse_report.x = prevx; mouse_report.y = prevy;
+        mouse_report.x = prevx;
+        mouse_report.y = prevy;
         dprintf("v %.3f, c %.3f gliding\n", velocity, velocity_carry);
     } else {
         // if velocity < decelleration rate
@@ -186,15 +186,15 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
     // clamp values
     const mouse_xy_report_t x = CONSTRAIN_REPORT(new_x);
     const mouse_xy_report_t y = CONSTRAIN_REPORT(new_y);
-    prevx = x;
-    prevy = y;
+    prevx                     = x;
+    prevy                     = y;
 
 // console output for debugging (enable/disable in config.h)
 #ifdef MACCEL_DEBUG
-    if (x!=0 || y!=0) {
-    const float distance_out = sqrtf(x * x + y * y);
-    const float velocity_out = velocity * maccel_factor;
-    printf("MACCEL: DPI:%4i Tko: %.3f Grw: %.3f Ofs: %.3f Lmt: %.3f | Fct: %.3f v.in: %.3f v.out: %.3f d.in: %3i d.out: %3i\n", device_cpi, g_maccel_config.takeoff, g_maccel_config.growth_rate, g_maccel_config.offset, g_maccel_config.limit, maccel_factor, velocity, velocity_out, CONSTRAIN_REPORT(distance), CONSTRAIN_REPORT(distance_out));
+    if (x != 0 || y != 0) {
+        const float distance_out = sqrtf(x * x + y * y);
+        const float velocity_out = velocity * maccel_factor;
+        printf("MACCEL: DPI:%4i Tko: %.3f Grw: %.3f Ofs: %.3f Lmt: %.3f | Fct: %.3f v.in: %.3f v.out: %.3f d.in: %3i d.out: %3i\n", device_cpi, g_maccel_config.takeoff, g_maccel_config.growth_rate, g_maccel_config.offset, g_maccel_config.limit, maccel_factor, velocity, velocity_out, CONSTRAIN_REPORT(distance), CONSTRAIN_REPORT(distance_out));
     }
 #endif // MACCEL_DEBUG
 

@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR o PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,16 +22,17 @@
 #    define DYNAMIC_KEYMAP_LAYER_COUNT 8
 #endif // VIA_ENABLE
 
+#define ARGOS_MINIMUM_DEFAULT_DPI 800
+
+#undef CIRQUE_PINNACLE_CURVED_OVERLAY
+#define CIRQUE_PINNACLE_ATTENUATION EXTREG__TRACK_ADCCONFIG__ADC_ATTENUATE_2X
+
 #undef POINTING_DEVICE_TASK_THROTTLE_MS
 #define POINTING_DEVICE_TASK_THROTTLE_MS 10
 
 // #undef  PRINTF_SUPPORT_DECIMAL_SPECIFIERS
 // #define PRINTF_SUPPORT_DECIMAL_SPECIFIERS 1
 
-#define MACCEL_TAKEOFF 2.0 // lower/higher value = curve takes off more smoothly/abrubtly
-#define MACCEL_GROWTH 0.25 // lower/higher value = curve reaches its upper limit slower/faster
-#define MACCEL_OFFSET 2.2  // lower/higher value = acceleration kicks in earlier/later
-#define MACCEL_LIMIT 0.2   // upper limit of accel curve (maximum acceleration factor)
 // #define MACCEL_USE_KEYCODES
 
 #define EECONFIG_USER_DATA_SIZE 20
@@ -41,3 +42,4 @@
 #define PRINTF_SUPPORT_DECIMAL_SPECIFIERS 1
 
 #define POINTING_DEVICE_ROTATION_90
+#define ARGOS_DRAGSCROLL_REVERSE_Y

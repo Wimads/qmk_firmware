@@ -51,8 +51,7 @@ enum dilemma_keymap_layers { LAYER_BASE = 0 };
 
 #define LAYOUT_wrapper(...) LAYOUT(__VA_ARGS__)
 
-
-#define LAYOUT_wrapper_TP3S(sw1, sw2, sw3) LAYOUT_wrapper(sw2, sw3, KC_NO, sw1)
+#define LAYOUT_wrapper_TP3S(sw1, sw2, sw3) LAYOUT_wrapper(sw3, sw2, KC_NO, sw1)
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
