@@ -20,7 +20,9 @@
 #include "maccel/maccel.h"
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+#ifdef MACCEL_ENABLE
     return pointing_device_task_maccel(mouse_report);
+#endif
 }
 
 enum my_keycodes {
@@ -66,7 +68,7 @@ enum dilemma_keymap_layers { LAYER_BASE = 0 };
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_BASE] = LAYOUT_wrapper_TP3S(
         KC_BTN1,
-                KC_BTN2,
+        EE_CLR,
         DRGSCRL
     )
 };

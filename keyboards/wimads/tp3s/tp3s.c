@@ -26,15 +26,15 @@
 
 #ifdef POINTING_DEVICE_ENABLE
 #    ifndef TP3S_MINIMUM_DEFAULT_DPI
-#        define TP3S_MINIMUM_DEFAULT_DPI 300
+#        define TP3S_MINIMUM_DEFAULT_DPI 200
 #    endif // TP3S_MINIMUM_DEFAULT_DPI
 
 #    ifndef TP3S_DEFAULT_DPI_CONFIG_STEP
-#        define TP3S_DEFAULT_DPI_CONFIG_STEP 100
+#        define TP3S_DEFAULT_DPI_CONFIG_STEP 200
 #    endif // TP3S_DEFAULT_DPI_CONFIG_STEP
 
 #    ifndef TP3S_MINIMUM_SNIPING_DPI
-#        define TP3S_MINIMUM_SNIPING_DPI 200
+#        define TP3S_MINIMUM_SNIPING_DPI 100
 #    endif // TP3S_MINIMUM_SNIPING_DPI
 
 #    ifndef TP3S_SNIPING_DPI_CONFIG_STEP
@@ -53,10 +53,10 @@
 typedef union {
     uint8_t raw;
     struct {
-        uint8_t pointer_default_dpi : 4; // 16 steps available.
-        uint8_t pointer_sniping_dpi : 2; // 4 steps available.
-        bool    is_dragscroll_enabled : 1;
-        bool    is_sniping_enabled : 1;
+        uint16_t pointer_default_dpi : 10; // 16 steps available.
+        uint16_t pointer_sniping_dpi : 1;  // 4 steps available.
+        bool     is_dragscroll_enabled : 1;
+        bool     is_sniping_enabled : 1;
     } __attribute__((packed));
 } tp3s_config_t;
 
@@ -216,8 +216,8 @@ report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
     // print("test 1");
     if (is_keyboard_master()) {
         // print("test 2");
-        pointing_device_task_tp3s(&mouse_report);
         mouse_report = pointing_device_task_user(mouse_report);
+        pointing_device_task_tp3s(&mouse_report);
     }
     return mouse_report;
 }

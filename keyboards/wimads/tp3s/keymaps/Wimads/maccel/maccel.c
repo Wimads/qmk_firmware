@@ -18,13 +18,13 @@ static uint32_t maccel_timer;
 #    define MACCEL_OFFSET 1.7 // lower/higher value = acceleration kicks in earlier/later
 #endif
 #ifndef MACCEL_LIMIT
-#    define MACCEL_LIMIT 0.2 // lower limit of accel curve (minimum acceleration factor)
+#    define MACCEL_LIMIT 0.4 // lower limit of accel curve (minimum acceleration factor)
 #endif
 #ifndef MACCEL_CPI_THROTTLE_MS
 #    define MACCEL_CPI_THROTTLE_MS 200 // milliseconds to wait between requesting the device's current DPI
 #endif
 #ifndef MACCEL_LIMIT_UPPER
-#    define MACCEL_LIMIT_UPPER 1 // upper limit of accel curve, recommended to leave at 1; adjust DPI setting instead.
+#    define MACCEL_LIMIT_UPPER 3 // upper limit of accel curve, recommended to leave at 1; adjust DPI setting instead.
 #endif
 #ifndef MACCEL_ROUNDING_CARRY_TIMEOUT_MS
 #    define MACCEL_ROUNDING_CARRY_TIMEOUT_MS 200 // milliseconds after which to reset quantization error correction (forget rounding remainder)
@@ -123,10 +123,10 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
     if (mouse_report.x * rounding_carry_x < 0) rounding_carry_x = 0;
     if (mouse_report.y * rounding_carry_y < 0) rounding_carry_y = 0;
     // Limit expensive calls to get device cpi settings only when mouse stationary for > 200ms.
-    static uint16_t device_cpi = 300;
-    if (delta_time > MACCEL_CPI_THROTTLE_MS) {
+    static uint16_t device_cpi = 1000;
+    /*if (delta_time > MACCEL_CPI_THROTTLE_MS) {
         device_cpi = pointing_device_get_cpi();
-    }
+    }*/
     // calculate dpi correction factor (for normalizing velocity range across different user dpi settings)
     const float dpi_correction = (float)1000.0f / device_cpi;
     // calculate euclidean distance moved (sqrt(x^2 + y^2))
@@ -157,7 +157,7 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
 #ifdef MACCEL_DEBUG
     const float distance_out = sqrtf(x * x + y * y);
     const float velocity_out = velocity * maccel_factor;
-    printf("MACCEL: DPI:%4i Tko: %.3f Grw: %.3f Ofs: %.3f Lmt: %.3f | Fct: %.3f v.in: %.3f v.out: %.3f d.in: %3i d.out: %3i\n", device_cpi, g_maccel_config.takeoff, g_maccel_config.growth_rate, g_maccel_config.offset, g_maccel_config.limit, maccel_factor, velocity, velocity_out, CONSTRAIN_REPORT(distance), CONSTRAIN_REPORT(distance_out));
+    printf("MACCEL: %i | DPI: %4i Tko: %.3f Grw: %.3f Ofs: %.3f Lmt: %.3f | Fct: %.3f v.in: %.3f v.out: %.3f d.in: %3i d.out: %3i\n", g_maccel_config.enabled, device_cpi, g_maccel_config.takeoff, g_maccel_config.growth_rate, g_maccel_config.offset, g_maccel_config.limit, maccel_factor, velocity, velocity_out, CONSTRAIN_REPORT(distance), CONSTRAIN_REPORT(distance_out));
 #endif // MACCEL_DEBUG
 
     // report back accelerated values
