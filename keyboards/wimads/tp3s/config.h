@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Wim aan de Stegge (Wimads)
+ * Copyright 2024 Wim aan de Stegge (@Wimads)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,13 @@
 #pragma once
 
 ////HARDWARE CONFIG////
-
-/*Trackpad*/
+/*Azoteq driver*/
 #define AZOTEQ_IQS5XX_TPS65
+
+/*Azoteq over I2C*/
+#define I2C1_SDA_PIN GP10
+#define I2C1_SCL_PIN GP11
+#define I2C_DRIVER I2CD1
 // #define AZOTEQ_IQS5XX_ADDRESS    // (Optional) Sets the I2C Address for the Azoteq trackpad	0xE8
 // #define AZOTEQ_IQS5XX_TIMEOUT_MS //	(Optional) The timeout for i2c communication with in milliseconds.
 
@@ -35,7 +39,7 @@
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET_LED GP17
 
-/*Unknown from argos*/
+/*Unknown RP2040 voodoo*/
 #define CRC8_USE_TABLE
 #define CRC8_OPTIMIZE_SPEED
 
