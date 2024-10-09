@@ -1,4 +1,6 @@
-/* Copyright 2024 Wimads
+/**
+ * Copyright 2022 Charly Delay <charly@codesink.dev> (@0xcharly)
+ * Copyright 2023 casuanoob <casuanoob@hotmail.com> (@casuanoob)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,30 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-////TO DO////
-/*
- */
 #include QMK_KEYBOARD_H
-
-////MOUSE ACCELERATION////
-#ifdef MACCEL_ENABLE
-#    include "maccel/maccel.h"
-#endif
-
-void keyboard_post_init_user(void) {
-    keyboard_post_init_maccel();
-};
+#include "maccel/maccel.h"
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-#ifdef MACCEL_ENABLE
     return pointing_device_task_maccel(mouse_report);
-#endif
-};
+}
 
-////LAYER & KEYCODE DEFINITIONS////
-enum layers {
-    _DEF, // default
-    _QMK, // QK boot, eeprom reset, dpi up/down
+enum my_keycodes {
+    MA_STEEPNESS = QK_USER, // mouse acceleration curve steepness step key
+    MA_OFFSET,              // mouse acceleration curve offset step key
+    MA_LIMIT,               // mouse acceleration curve limit step key
+    MA_TAKEOFF
 };
 
 #define LMB KC_BTN1
@@ -46,63 +36,47 @@ enum layers {
 #define BCK KC_BTN4
 #define FWD KC_BTN5
 
-#define RST_QMK LT(_QMK, QK_BOOT)
 #define DRTGSCR LT(10, KC_NO) // drag-toggle-scroll >>further defined in macro
 
-#include "gboards/g/keymap_combo.h"
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // if (!process_record_maccel(keycode, record, MA_STEEPNESS, MA_OFFSET, MA_LIMIT)) {
+    //     return false;
+    // }
+    return true;
+}
+
+#ifdef COMBO_ENABLE
+#    include "gboards/g/keymap_combo.h"
+#endif
+
+enum dilemma_keymap_layers { LAYER_BASE = 0 };
+
+#ifndef POINTING_DEVICE_ENABLE
+#    define DRGSCRL KC_NO
+#    define DPI_MOD KC_NO
+#    define S_D_MOD KC_NO
+#    define SNIPING KC_NO
+#endif // !POINTING_DEVICE_ENABLE
+
+#define LAYOUT_wrapper(...) LAYOUT(__VA_ARGS__)
+
+#define LAYOUT_wrapper_TP3S(sw1, sw2, sw3) LAYOUT_wrapper(sw3, sw2, KC_NO, sw1)
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_DEF] = LAYOUT(RMB, DRTGSCR, LMB),
-    [_QMK] = LAYOUT(EE_CLR, DPI_RMOD, DPI_MOD)
+    [LAYER_BASE] = LAYOUT_wrapper_TP3S(
+        KC_BTN1,
+                KC_BTN2,
+        DRGSCRL
+    )
 };
 // clang-format on
 
-////CUSTOM KEY BEHAVIOURS////
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    static bool dragscroll  = false; // dragscroll active or not
-    static bool drag_toggle = false; // dragscroll was activated via toggle or not
-    // other macros:
-    switch (keycode) {
-        case RST_QMK:
-            if (record->event.pressed && record->tap.count == 1) {
-                maccel_enabled(!maccel_get_enabled());
-                return false;
-            } else if (record->event.pressed && record->tap.count == 2) {
-                maccel_enabled(!maccel_get_enabled());
-                reset_keyboard();
-                return false;
-            }
-            return true;
-
-        case DRTGSCR: // drags-toggle-scroll
-            if (record->event.pressed && record->tap.count) {
-                // on tap: toggle dragscroll on/off
-                dragscroll = !dragscroll;                             // invert dragscroll state
-                charybdis_set_pointer_dragscroll_enabled(dragscroll); // set dragscroll
-                drag_toggle = dragscroll;                             // set drag_toggle state
-            } else if (record->event.pressed && !drag_toggle) {
-                // on hold and not toggled: turn dragscroll on
-                dragscroll = true;
-                charybdis_set_pointer_dragscroll_enabled(dragscroll);
-            } else if (record->event.pressed && drag_toggle) {
-                // on hold and toggled (ie. tap once and then hold): turn drag_toggle off
-                drag_toggle = false;
-                dragscroll  = true;
-                charybdis_set_pointer_dragscroll_enabled(dragscroll);
-            } else {
-                // on release:
-                if (!drag_toggle) {
-                    // if not toggled, turn off dragscroll
-                    dragscroll = false;
-                    charybdis_set_pointer_dragscroll_enabled(dragscroll);
-                } // else do nothing
-            }
-            return false;
-
-        default:
-            return true;
-
-    } // switch
-    return true;
-}; // process_record_user
+void keyboard_post_init_user(void) {
+    // Customise these values to desired behaviour
+    debug_enable = true;
+    debug_matrix = true;
+    keyboard_post_init_maccel();
+    // debug_keyboard=true;
+    // debug_mouse=true;
+}

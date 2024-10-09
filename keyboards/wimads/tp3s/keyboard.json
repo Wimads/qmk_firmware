@@ -2,6 +2,13 @@
     "keyboard_name": "TP3S",
     "manufacturer": "Wimads",
 
+    "usb": {
+        "vid": "0x5753",
+        "pid": "0x5433",
+        "max_power": 100,
+        "device_version": "1.0.0"
+    },
+
     "processor": "RP2040",
     "bootloader": "rp2040",
 

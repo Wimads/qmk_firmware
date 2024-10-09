@@ -106,23 +106,14 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
     // rounding carry to recycle dropped floats from int mouse reports, to smoothen low speed movements (credit @ankostis)
     static float rounding_carry_x = 0;
     static float rounding_carry_y = 0;
-    static bool  mouse_idle       = true;
     // time since last mouse report:
     const uint16_t delta_time = timer_elapsed32(maccel_timer);
     // skip maccel maths if report = 0, or if maccel not enabled.
     if ((mouse_report.x == 0 && mouse_report.y == 0) || !g_maccel_config.enabled) {
-        if (!mouse_idle) {
-            printf("MACCEL: mouse is idle\n");
-            mouse_idle = true;
-        }
         return mouse_report;
     }
     // reset timer:
     maccel_timer = timer_read32();
-    if (mouse_idle) {
-        printf("MACCEL: mouse started moving\n");
-        mouse_idle = false;
-    }
     // Reset carry if too much time passed
     if (delta_time > MACCEL_ROUNDING_CARRY_TIMEOUT_MS) {
         rounding_carry_x = 0;
@@ -142,26 +133,8 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
     const float distance = sqrtf(mouse_report.x * mouse_report.x + mouse_report.y * mouse_report.y);
     // calculate delta velocity: dv = distance/dt
     const float velocity_raw = distance / delta_time;
-    // calculate input velocity depending on glide state:
-    static float velocity         = 0;
-    static float velocity_carry   = 0;
-    const float  glide_decel_rate = 10;
-    if (finger_present) {
-        // if finger is on touchpad
-        // normal velocity calculation
-        velocity       = dpi_correction * velocity_raw;
-        velocity_carry = velocity;
-    } else if (velocity_carry > glide_decel_rate) {
-        // if no finger on touchpad && velocity greater than decelleration rate
-        // glide velocity calculation
-        velocity       = velocity_carry - glide_decel_rate;
-        velocity_carry = velocity;
-    } else {
-        // glide to 0
-        velocity       = 0;
-        velocity_carry = velocity;
-    }
-
+    // correct raw velocity for dpi
+    const float velocity = dpi_correction * velocity_raw;
     // letter variables for readability of maths:
     const float k = g_maccel_config.takeoff;
     const float g = g_maccel_config.growth_rate;
@@ -184,10 +157,7 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
 #ifdef MACCEL_DEBUG
     const float distance_out = sqrtf(x * x + y * y);
     const float velocity_out = velocity * maccel_factor;
-    if (velocity < 29.0f && maccel_factor >= 0.999f) {
-        printf("MACCEL: WARNING! Error in factor calculation: Fct: %.3f v.in: %.3f v.out: %.3f d.in: %3i d.out: %3i\n", maccel_factor, velocity, velocity_out, CONSTRAIN_REPORT(distance), CONSTRAIN_REPORT(distance_out));
-    }
-// printf("MACCEL: DPI:%4i Tko: %.3f Grw: %.3f Ofs: %.3f Lmt: %.3f | Fct: %.3f v.in: %.3f v.out: %.3f d.in: %3i d.out: %3i\n", device_cpi, g_maccel_config.takeoff, g_maccel_config.growth_rate, g_maccel_config.offset, g_maccel_config.limit, maccel_factor, velocity, velocity_out, CONSTRAIN_REPORT(distance), CONSTRAIN_REPORT(distance_out));
+    printf("MACCEL: DPI:%4i Tko: %.3f Grw: %.3f Ofs: %.3f Lmt: %.3f | Fct: %.3f v.in: %.3f v.out: %.3f d.in: %3i d.out: %3i\n", device_cpi, g_maccel_config.takeoff, g_maccel_config.growth_rate, g_maccel_config.offset, g_maccel_config.limit, maccel_factor, velocity, velocity_out, CONSTRAIN_REPORT(distance), CONSTRAIN_REPORT(distance_out));
 #endif // MACCEL_DEBUG
 
     // report back accelerated values

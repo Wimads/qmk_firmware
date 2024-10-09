@@ -16,6 +16,14 @@
 
 #pragma once
 
+#ifdef VIA_ENABLE
+/* VIA configuration. */
+#    define DYNAMIC_KEYMAP_LAYER_COUNT 8
+#endif // VIA_ENABLE
+
+#define TP3S_MINIMUM_DEFAULT_DPI 800
+// #define TP3S_DRAGSCROLL_REVERSE_Y
+
 // combos
 #define COMBO_VARIABLE_LEN
 #define COMBO_TERM 60
