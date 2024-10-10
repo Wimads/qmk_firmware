@@ -20,6 +20,7 @@
 ////HARDWARE CONFIG////
 /*Azoteq driver*/
 #define AZOTEQ_IQS5XX_TPS65
+#define POINTING_DEVICE_MOTION_PIN GP27
 
 /*Azoteq over I2C*/
 #define I2C1_SDA_PIN GP10

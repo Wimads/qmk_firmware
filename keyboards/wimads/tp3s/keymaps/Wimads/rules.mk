@@ -5,7 +5,7 @@ CONSOLE_ENABLE = yes
 
 # MACCEL
 MACCEL_VIA_ENABLE = no
-MACCEL_ENABLE = yes
+MACCEL_ENABLE = no
 SRC += ./maccel/maccel.c
 ifeq ($(strip $(VIA_ENABLE)), yes)
 	ifeq ($(strip $(MACCEL_VIA_ENABLE)), yes)
