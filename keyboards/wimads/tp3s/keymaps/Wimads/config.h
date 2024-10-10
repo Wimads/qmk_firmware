@@ -18,16 +18,31 @@
 
 /*scroll config*/
 #define AZOTEQ_IQS5XX_SCROLL_INITIAL_DISTANCE 1 // trigger distance (pixels) for 2-finger scroll
-#define TP3S_SCROLL_DIV 6.0                     // devisor (float) for slowing down 2-finger scroll
+#define TP3S_SCROLL_DIV 6.0                     // divisor (float) for slowing down 2-finger scroll
 
 /*combos*/
 #define COMBO_VARIABLE_LEN
 #define COMBO_TERM 60
 
-/*maccel*/
-#define EECONFIG_USER_DATA_SIZE 20
-#define MACCEL_DEBUG // enable debug console
-#undef PRINTF_SUPPORT_DECIMAL_SPECIFIERS
+/*maccel curve parameters
+ * IMPORTANT:
+ * MACCEL_LIMIT_UPPER should normally *not* be set by user! Instead DPI setting should be adjusted.
+ * Unfortunately, weird things happen in maccel when DPI is adjusted on the Azoteq sensor. Cause is yet unkown.
+ * WORKAROUND:
+ * 1. Do NOT touch default DPI device setting. Instead:
+ * 2. Adjust value for MACCEL_LIMIT_UPPER to get a lower/higher sensitivity (equivalent to multiplying the default DPI of 1000)
+ * 3. Unfortunate side effect is that a different upper limit, will affect how the other variables feel, so it may be a bit harder to dial in.
+ */
+#define MACCEL_TAKEOFF 1.9     // lower/higher value = curve starts more smoothly/abruptly
+#define MACCEL_GROWTH_RATE 0.5 // lower/higher value = curve reaches its upper limit slower/faster
+#define MACCEL_OFFSET 2.0      // lower/higher value = acceleration kicks in earlier/later
+#define MACCEL_LIMIT 0.4       // lower limit of accel curve (minimum acceleration factor)
+#define MACCEL_LIMIT_UPPER 3.5 // lower/higher vaule = lower/higher maximum sensitivity (normally set to 1, but used as workaround for Azoteq)
+
+/*maccel "under the hood" */
+#define EECONFIG_USER_DATA_SIZE 20          // technical under the hood necessity for maccel
+#define MACCEL_DEBUG                        // enable debug console
+#undef PRINTF_SUPPORT_DECIMAL_SPECIFIERS    //
 #define PRINTF_SUPPORT_DECIMAL_SPECIFIERS 1 // enable floats in debug console
 
 /*VIA (not currently enabled yet)*/

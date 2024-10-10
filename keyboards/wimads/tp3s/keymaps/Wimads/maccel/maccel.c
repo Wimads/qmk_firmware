@@ -124,7 +124,10 @@ report_mouse_t pointing_device_task_maccel(report_mouse_t mouse_report) {
     if (mouse_report.y * rounding_carry_y < 0) rounding_carry_y = 0;
     // Limit expensive calls to get device cpi settings only when mouse stationary for > 200ms.
     static uint16_t device_cpi = 1000;
-    /*if (delta_time > MACCEL_CPI_THROTTLE_MS) {
+    /*AZOTEQ WORKAROUND
+     *below section is commented out, due to unexpected results for different AZOTEQ DPI settings.
+     *instead DPI is fixed at 1000; and upper limit variable should be adjusted for dialing in sensitivity.
+    if (delta_time > MACCEL_CPI_THROTTLE_MS) {
         device_cpi = pointing_device_get_cpi();
     }*/
     // calculate dpi correction factor (for normalizing velocity range across different user dpi settings)
