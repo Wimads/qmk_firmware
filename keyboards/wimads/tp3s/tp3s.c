@@ -41,21 +41,18 @@
 #        define TP3S_SNIPING_DPI_CONFIG_STEP 100
 #    endif // TP3S_SNIPING_DPI_CONFIG_STEP
 
-// Fixed DPI for drag-scroll.
-#    ifndef TP3S_DRAGSCROLL_DPI
-#        define TP3S_DRAGSCROLL_DPI 100
-#    endif // TP3S_DRAGSCROLL_DPI
+// divisor to slow down scroll
+#    ifndef TP3S_SCROLL_DIV
+#        define TP3S_SCROLL_DIV 2.0
+#    endif // TP3S_SCROLL_DIV
 
-#    ifndef TP3S_DRAGSCROLL_BUFFER_SIZE
-#        define TP3S_DRAGSCROLL_BUFFER_SIZE 6
-#    endif // TP3S_DRAGSCROLL_BUFFER_SIZE
+#    define TP3S_SCROLL_TIMEOUT 200
 
 typedef union {
     uint8_t raw;
     struct {
         uint16_t pointer_default_dpi : 10; // 16 steps available.
         uint16_t pointer_sniping_dpi : 1;  // 4 steps available.
-        bool     is_dragscroll_enabled : 1;
         bool     is_sniping_enabled : 1;
     } __attribute__((packed));
 } tp3s_config_t;
@@ -65,21 +62,20 @@ static tp3s_config_t g_tp3s_config = {0};
 /**
  * \brief Set the value of `config` from EEPROM.
  *
- * Note that `is_dragscroll_enabled` and `is_sniping_enabled` are purposefully
+ * Note that `is_sniping_enabled` are purposefully
  * ignored since we do not want to persist this state to memory.  In practice,
  * this state is always written to maximize write-performances.  Therefore, we
  * explicitly set them to `false` in this function.
  */
 static void read_tp3s_config_from_eeprom(tp3s_config_t* config) {
-    config->raw                   = eeconfig_read_kb() & 0xff;
-    config->is_dragscroll_enabled = false;
-    config->is_sniping_enabled    = false;
+    config->raw                = eeconfig_read_kb() & 0xff;
+    config->is_sniping_enabled = false;
 }
 
 /**
  * \brief Save the value of `config` to eeprom.
  *
- * Note that all values are written verbatim, including whether drag-scroll
+ * Note that all values are written verbatim, including whether
  * and/or sniper mode are enabled.  `read_tp3s_config_from_eeprom(…)`
  * resets these 2 values to `false` since it does not make sense to persist
  * these across reboots of the board.
@@ -100,9 +96,7 @@ static uint16_t get_pointer_sniping_dpi(tp3s_config_t* config) {
 
 /** \brief Set the appropriate DPI for the input config. */
 static void maybe_update_pointing_device_cpi(tp3s_config_t* config) {
-    if (config->is_dragscroll_enabled) {
-        pointing_device_set_cpi(TP3S_DRAGSCROLL_DPI);
-    } else if (config->is_sniping_enabled) {
+    if (config->is_sniping_enabled) {
         pointing_device_set_cpi(get_pointer_sniping_dpi(config));
     } else {
         pointing_device_set_cpi(get_pointer_default_dpi(config));
@@ -166,15 +160,6 @@ void tp3s_set_pointer_sniping_enabled(bool enable) {
     maybe_update_pointing_device_cpi(&g_tp3s_config);
 }
 
-bool tp3s_get_pointer_dragscroll_enabled(void) {
-    return g_tp3s_config.is_dragscroll_enabled;
-}
-
-void tp3s_set_pointer_dragscroll_enabled(bool enable) {
-    g_tp3s_config.is_dragscroll_enabled = enable;
-    maybe_update_pointing_device_cpi(&g_tp3s_config);
-}
-
 void pointing_device_init_kb(void) {
     maybe_update_pointing_device_cpi(&g_tp3s_config);
     pointing_device_init_user();
@@ -183,33 +168,35 @@ void pointing_device_init_kb(void) {
 /**
  * \brief Augment the pointing device behavior.
  *
- * Implement drag-scroll.
+ * Implement scroll devisor.
  */
+
+static uint32_t tp3s_scroll_timer;
+
 static void pointing_device_task_tp3s(report_mouse_t* mouse_report) {
-    static int16_t scroll_buffer_x = 0;
-    static int16_t scroll_buffer_y = 0;
-    if (g_tp3s_config.is_dragscroll_enabled) {
-#    ifdef TP3S_DRAGSCROLL_REVERSE_X
-        scroll_buffer_x -= mouse_report->x;
-#    else
-        scroll_buffer_x += mouse_report->x;
-#    endif // TP3S_DRAGSCROLL_REVERSE_X
-#    ifdef TP3S_DRAGSCROLL_REVERSE_Y
-        scroll_buffer_y -= mouse_report->y;
-#    else
-        scroll_buffer_y += mouse_report->y;
-#    endif // TP3S_DRAGSCROLL_REVERSE_Y
-        mouse_report->x = 0;
-        mouse_report->y = 0;
-        if (abs(scroll_buffer_x) > TP3S_DRAGSCROLL_BUFFER_SIZE) {
-            mouse_report->h = scroll_buffer_x > 0 ? 1 : -1;
-            scroll_buffer_x = 0;
-        }
-        if (abs(scroll_buffer_y) > TP3S_DRAGSCROLL_BUFFER_SIZE) {
-            mouse_report->v = scroll_buffer_y > 0 ? 1 : -1;
-            scroll_buffer_y = 0;
-        }
+    static float scroll_carry_h = 0;
+    static float scroll_carry_v = 0;
+    // store time elapsed since last scroll event:
+    const uint16_t delta_time = timer_elapsed32(tp3s_scroll_timer);
+    // reset scroll timer:
+    tp3s_scroll_timer = timer_read32();
+    // reset scroll_carry if timed out:
+    if (delta_time > TP3S_SCROLL_TIMEOUT) {
+        scroll_carry_h = 0;
+        scroll_carry_v = 0;
     }
+    // Reset carry when pointer scroll swaps direction:
+    if (mouse_report->h * scroll_carry_h < 0) scroll_carry_h = 0;
+    if (mouse_report->v * scroll_carry_v < 0) scroll_carry_v = 0;
+    // apply scroll divisor:
+    const float new_h = scroll_carry_h + (float)mouse_report->h / TP3S_SCROLL_DIV;
+    const float new_v = scroll_carry_v + (float)mouse_report->v / TP3S_SCROLL_DIV;
+    // carry rounded off float to next scroll report:
+    scroll_carry_h = new_h - (int)new_h;
+    scroll_carry_v = new_v - (int)new_v;
+    // update scroll reports with new value:
+    mouse_report->h = (int)new_h;
+    mouse_report->v = (int)new_v;
 }
 
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
@@ -233,35 +220,8 @@ static bool has_shift_mod(void) {
 }
 #    endif // POINTING_DEVICE_ENABLE && !NO_TP3S_KEYCODES
 
-/**
- * \brief Outputs the TP3S configuration to console.
- *
- * Prints the in-memory configuration structure to console, for debugging.
- * Includes:
- *   - raw value
- *   - drag-scroll: on/off
- *   - sniping: on/off
- *   - default DPI: internal table index/actual DPI
- *   - sniping DPI: internal table index/actual DPI
- */
-static void debug_tp3s_config_to_console(tp3s_config_t* config) {
-#    ifdef CONSOLE_ENABLE
-    dprintf("(tp3s) process_record_kb: config = {\n"
-            "\traw = 0x%X,\n"
-            "\t{\n"
-            "\t\tis_dragscroll_enabled=%u\n"
-            "\t\tis_sniping_enabled=%u\n"
-            "\t\tdefault_dpi=0x%X (%u)\n"
-            "\t\tsniping_dpi=0x%X (%u)\n"
-            "\t}\n"
-            "}\n",
-            config->raw, config->is_dragscroll_enabled, config->is_sniping_enabled, config->pointer_default_dpi, get_pointer_default_dpi(config), config->pointer_sniping_dpi, get_pointer_sniping_dpi(config));
-#    endif // CONSOLE_ENABLE
-}
-
 bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     if (!process_record_user(keycode, record)) {
-        debug_tp3s_config_to_console(&g_tp3s_config);
         return false;
     }
 #    ifdef POINTING_DEVICE_ENABLE
@@ -299,21 +259,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
                 tp3s_set_pointer_sniping_enabled(!tp3s_get_pointer_sniping_enabled());
             }
             break;
-        case DRAGSCROLL_MODE:
-            tp3s_set_pointer_dragscroll_enabled(record->event.pressed);
-            break;
-        case DRAGSCROLL_MODE_TOGGLE:
-            if (record->event.pressed) {
-                tp3s_set_pointer_dragscroll_enabled(!tp3s_get_pointer_dragscroll_enabled());
-            }
-            break;
     }
 #        endif // !NO_TP3S_KEYCODES
 #    endif     // POINTING_DEVICE_ENABLE
-    debug_tp3s_config_to_console(&g_tp3s_config);
-    if (IS_QK_KB(keycode) || IS_MOUSEKEY(keycode)) {
-        debug_tp3s_config_to_console(&g_tp3s_config);
-    }
     return true;
 }
 

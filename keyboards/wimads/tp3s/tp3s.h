@@ -29,8 +29,6 @@ enum tp3s_keycodes {
     POINTER_SNIPING_DPI_REVERSE,
     SNIPING_MODE,
     SNIPING_MODE_TOGGLE,
-    DRAGSCROLL_MODE,
-    DRAGSCROLL_MODE_TOGGLE,
 };
 
 #        define DPI_MOD POINTER_DEFAULT_DPI_FORWARD
@@ -39,8 +37,6 @@ enum tp3s_keycodes {
 #        define S_D_RMOD POINTER_SNIPING_DPI_REVERSE
 #        define SNIPING SNIPING_MODE
 #        define SNP_TOG SNIPING_MODE_TOGGLE
-#        define DRGSCRL DRAGSCROLL_MODE
-#        define DRG_TOG DRAGSCROLL_MODE_TOGGLE
 #    endif // !NO_tp3s_KEYCODES
 
 /** \brief Return the current DPI value for the pointer's default mode. */
@@ -98,14 +94,4 @@ bool tp3s_get_pointer_sniping_enabled(void);
  */
 void tp3s_set_pointer_sniping_enabled(bool enable);
 
-/** \brief Whether drag-scroll is enabled. */
-bool tp3s_get_pointer_dragscroll_enabled(void);
-
-/**
- * \brief Enable/disable drag-scroll mode.
- *
- * When drag-scroll mode is enabled, horizontal and vertical pointer movements
- * are translated into horizontal and vertical scroll movements.
- */
-void tp3s_set_pointer_dragscroll_enabled(bool enable);
 #endif // POINTING_DEVICE_ENABLE

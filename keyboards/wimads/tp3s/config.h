@@ -17,7 +17,6 @@
 
 #pragma once
 
-////HARDWARE CONFIG////
 /*Azoteq driver*/
 #define AZOTEQ_IQS5XX_TPS65
 #define POINTING_DEVICE_MOTION_PIN GP27
@@ -26,15 +25,6 @@
 #define I2C1_SDA_PIN GP10
 #define I2C1_SCL_PIN GP11
 #define I2C_DRIVER I2CD1
-// #define AZOTEQ_IQS5XX_ADDRESS    // (Optional) Sets the I2C Address for the Azoteq trackpad	0xE8
-// #define AZOTEQ_IQS5XX_TIMEOUT_MS //	(Optional) The timeout for i2c communication with in milliseconds.
-
-/*trackpad orientation*/
-// #define POINTING_DEVICE_INVERT_Y
-// #define POINTING_DEVICE_INVERT_X
-// #define AZOTEQ_IQS5XX_ROTATION_90
-// #define AZOTEQ_IQS5XX_ROTATION_180
-// #define AZOTEQ_IQS5XX_ROTATION_270
 
 /*mcu reset*/
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
@@ -44,9 +34,16 @@
 #define CRC8_USE_TABLE
 #define CRC8_OPTIMIZE_SPEED
 
-////USER CONFIG////
+/*mouse reports*/
 #define MOUSE_EXTENDED_REPORT
-#define POINTING_DEVICE_TASK_THROTTLE_MS 10
 
+/*bootmagic -> sw3 on argos controller*/
 #define BOOTMAGIC_LITE_ROW_RIGHT 4
 #define BOOTMAGIC_LITE_COLUMN_RIGHT 0
+
+/*trackpad orientation*/
+// #define POINTING_DEVICE_INVERT_Y
+// #define POINTING_DEVICE_INVERT_X
+// #define AZOTEQ_IQS5XX_ROTATION_90
+// #define AZOTEQ_IQS5XX_ROTATION_180
+// #define AZOTEQ_IQS5XX_ROTATION_270

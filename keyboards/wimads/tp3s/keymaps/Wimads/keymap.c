@@ -38,8 +38,6 @@ enum my_keycodes {
 #define BCK KC_BTN4
 #define FWD KC_BTN5
 
-#define DRTGSCR LT(10, KC_NO) // drag-toggle-scroll >>further defined in macro
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // if (!process_record_maccel(keycode, record, MA_STEEPNESS, MA_OFFSET, MA_LIMIT)) {
     //     return false;
@@ -54,7 +52,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 enum dilemma_keymap_layers { LAYER_BASE = 0 };
 
 #ifndef POINTING_DEVICE_ENABLE
-#    define DRGSCRL KC_NO
 #    define DPI_MOD KC_NO
 #    define S_D_MOD KC_NO
 #    define SNIPING KC_NO
@@ -67,9 +64,9 @@ enum dilemma_keymap_layers { LAYER_BASE = 0 };
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_BASE] = LAYOUT_wrapper_TP3S(
-        KC_BTN1,
-        EE_CLR,
-        DRGSCRL
+        RMB,
+        MMB,
+        LMB
     )
 };
 // clang-format on

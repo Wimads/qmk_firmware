@@ -16,19 +16,21 @@
 
 #pragma once
 
-#ifdef VIA_ENABLE
-/* VIA configuration. */
-#    define DYNAMIC_KEYMAP_LAYER_COUNT 8
-#endif // VIA_ENABLE
+/*scroll config*/
+#define AZOTEQ_IQS5XX_SCROLL_INITIAL_DISTANCE 1 // trigger distance (pixels) for 2-finger scroll
+#define TP3S_SCROLL_DIV 6.0                     // devisor (float) for slowing down 2-finger scroll
 
-#define AZOTEQ_IQS5XX_SCROLL_INITIAL_DISTANCE 1
-
-// combos
+/*combos*/
 #define COMBO_VARIABLE_LEN
 #define COMBO_TERM 60
 
+/*maccel*/
 #define EECONFIG_USER_DATA_SIZE 20
-
 #define MACCEL_DEBUG // enable debug console
 #undef PRINTF_SUPPORT_DECIMAL_SPECIFIERS
 #define PRINTF_SUPPORT_DECIMAL_SPECIFIERS 1 // enable floats in debug console
+
+/*VIA (not currently enabled yet)*/
+#ifdef VIA_ENABLE
+#    define DYNAMIC_KEYMAP_LAYER_COUNT 8
+#endif // VIA_ENABLE
