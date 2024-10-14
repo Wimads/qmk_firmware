@@ -1,0 +1,39 @@
+{
+    "keyboard_name": "TP3S",
+    "manufacturer": "Wimads",
+
+    "usb": {
+        "vid": "0x5753",
+        "pid": "0x5433",
+        "max_power": 100,
+        "device_version": "1.0.0"
+    },
+
+    "processor": "RP2040",
+    "bootloader": "rp2040",
+
+    "diode_direction": "ROW2COL",
+    "matrix_pins": {
+        "direct": [
+            ["GP8","GP7"],
+            ["GP9","GP6"],
+        ],
+    },
+
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+                {"matrix": [0,0], "x": 0, "y": 0},
+                {"matrix": [0,1], "x": 1, "y": 0},
+                {"matrix": [1,0], "x": 0, "y": 1},
+                {"matrix": [1,1], "x": 1, "y": 1}
+            ]
+        }
+    },
+
+    "features": {
+        "bootmagic": true,
+        "mousekey": true,
+        "pointing_device": true
+    }
+}
