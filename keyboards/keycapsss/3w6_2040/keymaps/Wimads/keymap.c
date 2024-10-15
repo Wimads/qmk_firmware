@@ -201,7 +201,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Left  hand LED = 0;
  * Right hand LED = 1;
  */
-/*// rgb lighting variables:
+// rgb lighting variables:
 int rgb_hue   = 40;
 int rgb_sat   = 255;
 int rgb_val   = 255;
@@ -218,9 +218,9 @@ const uint8_t RGBLED_BREATHING_INTERVALS[] PROGMEM = {2, 2, 2, 2};
 // Set initial LED lighting state:
 void matrix_init_user(void) {
     // initiate rgb underglow (default mode as per ASW_on true):
-    rgblight_enable();
+    // rgblight_enable();
     rgblight_mode(rgb_mode);                    // set light effect for both LEDs
-    rgblight_sethsv(rgb_hue, rgb_sat, rgb_val); // set HSV value for both LEDs
+    rgblight_sethsv(rgb_hue, rgb_sat, rgb_val); // set HSV value for both LEDs*/
 };
 
 // Capsword indicator:
@@ -280,7 +280,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
     }
     return state;
-};*/
+};
 
 ////CUSTOM KEY BEHAVIOURS////
 // Turn on/off CAD combos:
