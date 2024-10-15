@@ -40,7 +40,7 @@ enum custom_keycodes {
     QTYTOGG,              // toggle QTYe layer
 };
 // Combos:
-#include "g/keymap_combo.h" //included after custom keycodes, so custom keycodes can be used in combos.def
+#include "gboards/g/keymap_combo.h" //included after custom keycodes, so custom keycodes can be used in combos.def
 ///..custom keycodes
 
 /// Keymaps..
@@ -96,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Left  hand LED = 0;
  * Right hand LED = 1;
  */
-// rgb lighting variables:
+/*// rgb lighting variables:
 int rgb_hue   = 40;
 int rgb_sat   = 255;
 int rgb_val   = 255;
@@ -175,7 +175,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
     }
     return state;
-};
+};*/
 
 ////CUSTOM KEY BEHAVIOURS////
 // Turn on/off CAD combos:
