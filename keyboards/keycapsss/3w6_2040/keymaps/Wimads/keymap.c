@@ -123,6 +123,8 @@ enum layers {
 // Tap-hold keys:
 #define FFF_NUM LT(_NUM, KC_F)
 #define JJJ_NUM LT(_NUM, KC_J)
+#define TTT_NUM LT(_NUM, KC_T)
+#define DDD_NUM LT(_NUM, KC_D)
 #define SPCLSFT LSFT_T(KC_SPC)
 #define SPCRSFT RSFT_T(KC_SPC)
 #define UNDLSFT LSFT_T(KC_UNDS) // further defined in macro (because shifted keycodes in _T() is not possible)
@@ -160,9 +162,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   //Qwerty e: (unmodified qwerty layout for emulation in for example monkeytype)
   [_QTYe] = LAYOUT_split_3x5_3(
-	  KC_QUOT, KC_L,    KC_H,    KC_V,    KC_Z,             KC_Q,    KC_W,    ADK_U,   ADK_O,   KC_Y,
-      KC_S,    KC_R,    ADK_N,   LT(_NUM, KC_T), KC_K,  KC_G, LT(_NUM, KC_D), ADK_E,   ADK_A,   ADK_I,
-	  KC_F,    KC_J,    KC_B,    KC_M,    KC_X,             KC_P,    KC_C,    KC_COMM, KC_DOT,  KC_EXLM,
+	  KC_V,    KC_L,    KC_M,    KC_G,    KC_QUOT,          KC_Q,    KC_K,    ADK_U,   ADK_O,   KC_Y,
+      KC_S,    KC_R,    ADK_N,   TTT_NUM, KC_Z,             KC_X,    DDD_NUM, ADK_E,   ADK_A,   ADK_I,
+	  KC_W,    KC_H,    KC_P,    KC_C,    KC_B,             KC_F,    KC_J,    KC_COMM, KC_DOT,  KC_EXLM,
 			          	OSMLALT, OSMLSFT, OSMLCTL,          OSMRALT, SPCRSFT, MO(_MISC)
   ),
   //CAD mode: (a mostly transparent layer, but will activate extra combos)
@@ -216,29 +218,29 @@ int rgb_hue_e = 165; // emulation (blue)
 const uint8_t RGBLED_BREATHING_INTERVALS[] PROGMEM = {2, 2, 2, 2};
 
 // Set initial LED lighting state:
-void matrix_init_user(void) {
+void keyboard_post_init_kb(void) {
     // initiate rgb underglow (default mode as per ASW_on true):
-    // rgblight_enable();
-    rgblight_mode(rgb_mode);                    // set light effect for both LEDs
-    rgblight_sethsv(rgb_hue, rgb_sat, rgb_val); // set HSV value for both LEDs*/
+    rgblight_enable_noeeprom();
+    rgblight_mode_noeeprom(rgb_mode);                    // set light effect for both LEDs
+    rgblight_sethsv_noeeprom(rgb_hue, rgb_sat, rgb_val); // set HSV value for both LEDs*/
 };
 
 // Capsword indicator:
 void caps_word_set_user(bool active) {
     if (active) {
         rgb_mode = 2;
-        rgblight_mode(rgb_mode);
+        rgblight_mode_noeeprom(rgb_mode);
         if (IS_LAYER_ON(_RNUM)) {
-            rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val); // override both LEDs, since can't override one when mode = 2;
+            rgblight_sethsv_noeeprom(rgb_hue_n, rgb_sat, rgb_val); // override both LEDs, since can't override one when mode = 2;
         } else {
-            rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
+            rgblight_sethsv_noeeprom(rgb_hue, rgb_sat, rgb_val);
         }
     } else {
         rgb_mode = 1;
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
+        rgblight_mode_noeeprom(rgb_mode);
+        rgblight_sethsv_noeeprom(rgb_hue, rgb_sat, rgb_val);
         if (IS_LAYER_ON(_RNUM)) {
-            rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val);
+            rgblight_sethsv_noeeprom(rgb_hue_n, rgb_sat, rgb_val);
             rgblight_sethsv_at(rgb_hue, rgb_sat, rgb_val, 0);
         }
     }
@@ -247,8 +249,8 @@ void caps_word_set_user(bool active) {
 // Layer indicators:
 layer_state_t layer_state_set_user(layer_state_t state) {
     if (IS_LAYER_ON_STATE(state, _RNUM) && is_caps_word_on()) {
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val); // override both LEDs, since can't override one when mode = 2;
+        rgblight_mode_noeeprom(rgb_mode);
+        rgblight_sethsv_noeeprom(rgb_hue_n, rgb_sat, rgb_val); // override both LEDs, since can't override one when mode = 2;
     } else if (IS_LAYER_ON_STATE(state, _RNUM)) {
         if (IS_LAYER_ON_STATE(state, _MISC)) {
             rgb_hue = rgb_hue_m;
@@ -261,8 +263,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         } else {
             rgb_hue = rgb_hue_q;
         }
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue_n, rgb_sat, rgb_val);
+        rgblight_mode_noeeprom(rgb_mode);
+        rgblight_sethsv_noeeprom(rgb_hue_n, rgb_sat, rgb_val);
         rgblight_sethsv_at(rgb_hue, rgb_sat, rgb_val, 0);
     } else {
         if (IS_LAYER_ON_STATE(state, _MISC)) {
@@ -276,8 +278,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         } else {
             rgb_hue = rgb_hue_q;
         }
-        rgblight_mode(rgb_mode);
-        rgblight_sethsv(rgb_hue, rgb_sat, rgb_val);
+        rgblight_mode_noeeprom(rgb_mode);
+        rgblight_sethsv_noeeprom(rgb_hue, rgb_sat, rgb_val);
     }
     return state;
 };

@@ -21,7 +21,7 @@
 #define TP3S_SCROLL_DIV 6.0                     // divisor (float) for slowing down 2-finger scroll
 
 /*tap config*/
-#define AZOTEQ_IQS5XX_TAP_DISTANCE 5 // error margin for tap (how many pixels movement to allow for registering tap).
+#define AZOTEQ_IQS5XX_TAP_DISTANCE 10 // error margin for tap (how many pixels movement to allow for registering tap).
 
 /*HLCC config*/
 #define LED_KANA_PIN GP26 // kana led pin for HLCC (Host LED Comms Channel)
@@ -39,11 +39,11 @@
  * 2. Adjust value for MACCEL_LIMIT_UPPER to get a lower/higher sensitivity (equivalent to multiplying the default DPI of 1000)
  * 3. Unfortunate side effect is that a different upper limit, will affect how the other variables feel, so it may be a bit harder to dial in.
  */
-#define MACCEL_TAKEOFF 1.1     // lower/higher value = curve starts more smoothly/abruptly
-#define MACCEL_GROWTH_RATE 0.6 // lower/higher value = curve reaches its upper limit slower/faster
-#define MACCEL_OFFSET 2.4      // lower/higher value = acceleration kicks in earlier/later
-#define MACCEL_LIMIT 0.6       // lower limit of accel curve (minimum acceleration factor)
-#define MACCEL_LIMIT_UPPER 3.3 // lower/higher vaule = lower/higher maximum sensitivity (normally set to 1, but used as workaround for Azoteq)
+#define MACCEL_TAKEOFF 1.8     // lower/higher value = curve starts more smoothly/abruptly
+#define MACCEL_GROWTH_RATE 0.8 // lower/higher value = curve reaches its upper limit slower/faster
+#define MACCEL_OFFSET 1.9      // lower/higher value = acceleration kicks in earlier/later
+#define MACCEL_LIMIT 0.8       // lower limit of accel curve (minimum acceleration factor)
+#define MACCEL_LIMIT_UPPER 4   // lower/higher vaule = lower/higher maximum sensitivity (normally set to 1, but used as workaround for Azoteq)
 
 /*maccel "under the hood" */
 #define EECONFIG_USER_DATA_SIZE 20          // technical under the hood necessity for maccel
