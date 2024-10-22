@@ -288,6 +288,16 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Turn on/off CAD combos:
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
     switch (combo_index) {
+        case QTY_START ... QTY_FINAL:
+            if (IS_LAYER_ON(_QTYe)) {
+                return false;
+            }
+            return true;
+        case QTYe_START ... QTYe_FINAL:
+            if (!IS_LAYER_ON(_QTYe)) {
+                return false;
+            }
+            return true;
         case CAD_START ... CAD_FINAL:
             if (!IS_LAYER_ON(_CAD)) {
                 return false;
