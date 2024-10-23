@@ -126,7 +126,7 @@ void matrix_scan_user(void) {
 #define MMB KC_BTN3
 #define BCK KC_BTN4
 #define FWD KC_BTN5
-#define ZOOMKEY LMB // sets LMB as "zoom_key" - can be changed to any - brief below.
+#define ZOOMKEY MMB // sets MMB as "zoom_key" - can be changed to any - brief below.
 #include "gboards/g/keymap_combo.h"
 
 /**
