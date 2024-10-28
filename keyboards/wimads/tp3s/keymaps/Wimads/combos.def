@@ -1,4 +1,4 @@
-COMB(DEF_FWD,   FWD,        MMB, RMB)      // _ X X
-COMB(DEF_BCK,   BCK,        LMB, MMB)      // X X _
-COMB(DEF_REF,   KC_F5,      LMB, RMB)      // X _ X
-COMB(DEF_ESC,   KC_ESC,     LMB, MMB, RMB) // X X X
+COMB(DEF_FWD,   FWD,        MMB, LMB)      // _ X X
+COMB(DEF_BCK,   BCK,        RMB, MMB)      // X X _
+COMB(DEF_REF,   KC_F5,      RMB, LMB)      // X _ X
+COMB(DEF_ESC,   KC_ESC,     RMB, MMB, LMB) // X X X
