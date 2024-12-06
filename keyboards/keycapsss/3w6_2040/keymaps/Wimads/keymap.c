@@ -1,5 +1,4 @@
 /*TO DO
- * Fix Oneshot-ish-mods: don't cancel oneshot when pressing multiple hot keys (ctrl+shift+a ..+c)
  * implement dragscroll trigger via numlock
  * get into lighting layers to fix capsword led animation
  */
@@ -111,15 +110,17 @@ enum layers {
 };
 
 /// Custom keycodes..
-// oneshot-ish-mods (mods act as oneshot only for stacking mods):
-#define OSMLCTL OSM(MOD_LCTL)
-#define OSMLSFT OSM(MOD_LSFT)
-#define OSMLALT OSM(MOD_LALT)
-#define OSMLGUI OSM(MOD_LGUI)
-#define OSMRCTL OSM(MOD_RCTL)
-#define OSMRSFT OSM(MOD_RSFT)
-#define OSMRALT OSM(MOD_RALT)
-#define OSMRGUI OSM(MOD_RGUI)
+// Stack-mods: tapping mods consecutively stacks them.
+static uint32_t stack_mod_timer;
+#define STACK_MOD_TIMEOUT 350   // time-out for stack_mods
+#define SM_LCTL LCTL_T(KC_LCTL) // Defined as mod-tap key for further processing in process_record_user
+#define SM_LSFT LSFT_T(KC_LSFT)
+#define SM_LALT LALT_T(KC_LALT)
+#define SM_LGUI LGUI_T(KC_LGUI)
+#define SM_RCTL RCTL_T(KC_RCTL)
+#define SM_RSFT RSFT_T(KC_RSFT)
+#define SM_RALT RALT_T(KC_RALT)
+#define SM_RGUI RGUI_T(KC_RGUI)
 // Tap-hold keys:
 #define FFF_NUM LT(_NUM, KC_F)
 #define JJJ_NUM LT(_NUM, KC_J)
@@ -129,19 +130,18 @@ enum layers {
 #define SPCRSFT RSFT_T(KC_SPC)
 #define UNDLSFT LSFT_T(KC_UNDS) // further defined in macro (because shifted keycodes in _T() is not possible)
 #define EQLRALT RALT_T(KC_EQL)
-// Auto-Dead-Key:   //auto-send space after deadkey, unless ADK_ key was held; requires "English(US)"+"Qwerty US" language+kbd settings in windows
-#define ADK_A LT(11, KC_A)
-#define ADK_E LT(11, KC_E)
-#define ADK_U LT(11, KC_U)
-#define ADK_I LT(11, KC_I)
-#define ADK_O LT(11, KC_O)
-#define ADK_N LT(11, KC_N)
+// Diacritic keys:   //Type diacritics by holding DC_key followed by dead key; requires "English(US)"+"Qwerty US" language+kbd settings in windows
+#define DC_A LT(11, KC_A)
+#define DC_E LT(11, KC_E)
+#define DC_U LT(11, KC_U)
+#define DC_I LT(11, KC_I)
+#define DC_O LT(11, KC_O)
+#define DC_N LT(11, KC_N)
 // Other:
 #define DOTCOMM LT(10, KC_DOT) // KC_DOT, KC_COMM on shif; swap behavoiur by double tap (further defined in macro)
 // Macros:
 enum custom_keycodes {
     CLEARKB = SAFE_RANGE, // clears all keys and/or layers that might be stuck
-    EE_BOOT,              // clear eeprom, then boot mode
     CADTOGG,              // toggle CAD mode
     RNUMTOG,              // toggle RNUM layer
     QTYTOGG,              // toggle QTYe layer
@@ -155,17 +155,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // clang-format off
   //Qwerty:
   [_QTY] = LAYOUT_split_3x5_3(
-	  KC_Q,    KC_W,    ADK_E,   KC_R,    KC_T,             KC_Y,    ADK_U,   ADK_I,   ADK_O,   KC_P,
-	  ADK_A,   KC_S,    KC_D,    FFF_NUM, KC_G,             KC_H,    JJJ_NUM, KC_K,    KC_L,    KC_QUOT,
-	  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             ADK_N,   KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-            			OSMLALT, OSMLSFT, OSMLCTL,          OSMRALT, SPCRSFT, MO(_MISC)
+	  KC_Q,    KC_W,    DC_E,    KC_R,    KC_T,             KC_Y,    DC_U,    DC_I,    DC_O,   KC_P,
+	  DC_A,    KC_S,    KC_D,    FFF_NUM, KC_G,             KC_H,    JJJ_NUM, KC_K,    KC_L,    KC_QUOT,
+	  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             DC_N,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
+            			SM_LALT, SM_LSFT, SM_LCTL,          SM_RALT, SPCRSFT, MO(_MISC)
   ),
   //Qwerty e: (unmodified qwerty layout for emulation in for example monkeytype)
   [_QTYe] = LAYOUT_split_3x5_3(
-	  KC_V,    KC_L,    KC_M,    KC_G,    KC_QUOT,          KC_Q,    KC_K,    ADK_U,   ADK_O,   KC_Y,
-      KC_S,    KC_R,    ADK_N,   TTT_NUM, KC_Z,             KC_X,    DDD_NUM, ADK_E,   ADK_A,   ADK_I,
+	  KC_V,    KC_L,    KC_M,    KC_G,    KC_QUOT,          KC_Q,    KC_K,    DC_U,    DC_O,    KC_Y,
+      KC_S,    KC_R,    DC_N,    TTT_NUM, KC_Z,             KC_X,    DDD_NUM, DC_E,    DC_A,    DC_I,
 	  KC_W,    KC_H,    KC_P,    KC_C,    KC_B,             KC_F,    KC_J,    KC_COMM, KC_DOT,  KC_EXLM,
-			          	OSMLALT, OSMLSFT, OSMLCTL,          OSMRALT, SPCRSFT, MO(_MISC)
+			          	SM_LALT, SM_LSFT, SM_LCTL,          SM_RALT, SPCRSFT, MO(_MISC)
   ),
   //CAD mode: (a mostly transparent layer, but will activate extra combos)
   [_CAD] = LAYOUT_split_3x5_3(
@@ -319,7 +319,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 typedef struct _multifunc_keycode_t { // define multifunc keycode functions
     uint16_t kc_record;               // unmodified keycode
     uint16_t kc_shifted;              // alternate keycode on shift
-    uint16_t kc_deadkey;              // alternate keycode on auto_dead_key
+    uint16_t kc_deadkey;              // alternate keycode on diacritic key
 } multifunc_keycode_t;
 // clang-format off
 #define MULTIFUNC_COUNT 12 // specify number of multifunc keycodes
@@ -332,14 +332,14 @@ multifunc_keycode_t multifunc_map[MULTIFUNC_COUNT] = {
     {KC_V,      S(KC_V),    KC_GRV    }, //04  v V `
     {KC_B,      S(KC_B),    S(KC_GRV) }, //05  b B ~
     // _DEF layer right:
-    {ADK_N,     S(KC_N),    S(KC_GRV) }, //06  n N ~
+    {DC_N,      S(KC_N),    S(KC_GRV) }, //06  n N ~
     {KC_M,      S(KC_M),    KC_GRV    }, //07  m M `
     {KC_COMM,   KC_SCLN,    KC_QUOT   }, //08  , ; '
     {KC_DOT,    S(KC_SCLN), S(KC_QUOT)}, //09  . : "
     {KC_EXLM,   KC_QUES,    S(KC_CIRC)}, //10  ! ? ^
     // _NUM layer:
     {KC_SLSH,   KC_BSLS,    S(KC_CIRC)}, //11  / \ ^
-    {KC_DLR,    RALT(KC_5), KC_NO     }, //12  $ €
+    {KC_DLR,    RALT(KC_5), KC_NO     }, //12  $ €   // KC_NO deadkey would result in keypress getting dropped, but edge case, so acceptable.
 };
 // clang-format on
 int get_multifunc_index(uint16_t kc_record) { // find corresponding item in multifunc map for pressed key
@@ -354,106 +354,147 @@ int get_multifunc_index(uint16_t kc_record) { // find corresponding item in mult
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // VARIABLES:
     //  general
-    const int mutifunc_index = get_multifunc_index(keycode); // check if keycode is in multifunc map
+    const int   mutifunc_index = get_multifunc_index(keycode); // check if keycode is in multifunc map
+    static bool dotcomm_state  = true;                         // state of dotcomm key; true = dot; false = comma;
+    //  Diacritic keys
+    static uint16_t dc_record    = KC_SPC; // store DC_ keycode to send after dead key (defined in multifunc keycodes)
+    static uint16_t dc_mod_shift = 0;      // store shift state of dc_record
+    static bool     dc_pending   = false;  // status of Diacritic key
     //  modifiers
-    const uint16_t mod_shift = get_mods() & MOD_MASK_SHIFT; // track shift state for custom shift behaviours (defined in multifunc keycodes)
-    static bool    mod_held  = false;                       // check if any mod is being held down for oneshot-ish-mods
-    //  dotcomm key
-    static bool dotcomm_state = true; // true = dot; false = comma;
-    //  Auto dead keys
-    static uint16_t adk_record    = KC_SPC; // keycode to send after dead key (defined in multifunc keycodes)
-    static uint16_t adk_mod_shift = 0;      // track shift state for auto_dead_key
-    //  layer tap
-    static bool hold_active = false; // active status of layer tap keys
-
-    // ONESHOT-ISH-MODS:
-    switch /* !! PUT NO MACROS IN THIS SWITCH !! */ (keycode) {
-        /* Oneshot-ish-mods:
-         *  Function as oneshot mods when followed by another mod
-         *  Function as regular mods when followed by non-modifier (for example an alpha key)
-         *  Effectively allows to stack mods by consecutively tapping them, without messing with regular mod behaviour for everything else.
-         */
-        // on modifier keypress:
+    static bool     mod_held    = false;                       // track if any mod is being held down (not tapped) for stack-mods
+    static uint16_t stack_mod_1 = 0;                           // first slot in mod-stack
+    static uint16_t stack_mod_2 = 0;                           // second slot in mod-stack
+    const uint16_t  mod_shift   = get_mods() & MOD_MASK_SHIFT; // track shift state for custom shift behaviours (defined in multifunc keycodes)
+    static uint16_t mod_pressed = 0;
+    switch /*mod_pressed*/ (keycode) {
+        // track which mod is pressed, return 0 if not a mod:
         case KC_LCTL ... KC_RGUI: // clang-format off
-        case OSMLCTL: case OSMLSFT: case OSMLALT: case OSMLGUI:
-        case OSMRCTL: case OSMRSFT: case OSMRALT: case OSMRGUI:
-        case SPCLSFT: case SPCRSFT: case UNDLSFT: case EQLRALT: // clang-format on
-            if (record->event.pressed && !record->tap.count) {
-                // ON HOLD:
-                mod_held = true; // track modifier status
+        case SM_LCTL: case SM_LSFT: case SM_LALT: case SM_LGUI:
+        case SM_RCTL: case SM_RSFT: case SM_RALT: case SM_RGUI: // clang-format on
+            if (record->event.pressed) {
+                // TAP || HOLD:
+                mod_pressed = MOD_BIT(keycode);
             } else {
-                // ON TAP | RELEASE:
-                mod_held = false; // track modifier status
+                // RELEASE:
+                mod_pressed = 0;
             }
             break;
+            // clang-format off
+        case SPCLSFT: case SPCRSFT: case UNDLSFT: case EQLRALT: // clang-format on
+            if (record->event.pressed && !record->tap.count) {
+                // HOLD:
+                mod_pressed = MOD_BIT(keycode);
+            } else {
+                // TAP || RELEASE
+                mod_pressed = 0;
+            }
+            break;
+        default:
+            mod_pressed = 0;
+            break;
+    } //..switch mod_pressed
 
+    // STACK_MODS:
+    switch /* STACK_MODS */ (keycode) {
+        /* Stack_mods:
+         *  Allows to stack mods by tapping them (ie. tap ctl then hold sft results in ctl+sft).
+         *  Stacking needs to happen within timeout, else it will restart stacking at 1.
+         *  The modifiers in the stack are registered only when the last mod is held down.
+         *  All mods in the stack will remain registered, until the held down mod is released. On release the stack is cleared.
+         *  If no mod is held down, any non-mod keypress will clear the stack, not returning any mods.
+         *  Up to 3 mods can be stacked (ie. tap 2, hold one). If a third mod is tapped, it will restart stacking at 1.
+         */
+
+        // on any modifier keypress:
+        case KC_LCTL ... KC_RGUI: // clang-format off
+        case SM_LCTL: case SM_LSFT: case SM_LALT: case SM_LGUI:
+        case SM_RCTL: case SM_RSFT: case SM_RALT: case SM_RGUI:
+        case SPCLSFT: case SPCRSFT: case UNDLSFT: case EQLRALT: // clang-format on
+            if (record->event.pressed && record->tap.count) {
+                // ON TAP, add mods to stack:
+                mod_held = false; // set mod_held state
+                if (timer_elapsed32(stack_mod_timer) >= STACK_MOD_TIMEOUT) {
+                    // if timed out, clear mod stack
+                    stack_mod_1 = 0;
+                    stack_mod_2 = 0;
+                }
+                if (!stack_mod_1) {
+                    // if 0 mods in stack:
+                    //  mod-taps like SPCLSFT return 0 for mod_pressed when tapped, thus won't get stacked;
+                    stack_mod_1 = mod_pressed;
+                } else if (!stack_mod_2 && mod_pressed) {
+                    // if 1 mod in stack && a mod is pressed:
+                    if (stack_mod_1 == mod_pressed) {
+                        // if stack_mod_1 is tapped again, clear stack
+                        stack_mod_1 = 0;
+                    } else {
+                        stack_mod_2 = mod_pressed;
+                        printf("MOD_STACK >>> mod_held: %i; stack_mod_1: %04x; stack_mod_2: %04x; mod_pressed: %04x; TAP: if(!stack_mod_2){if(stack_mode_1 != mod_pressed)}\n", mod_held, stack_mod_1, stack_mod_2, mod_pressed);
+                    }
+                } else if (stack_mod_2 == mod_pressed) {
+                    // if mod 2 tapped a second time, clear entire stack
+                    stack_mod_1 = 0;
+                    stack_mod_2 = 0;
+                    printf("MOD_STACK >>> mod_held: %i; stack_mod_1: %04x; stack_mod_2: %04x; mod_pressed: %04x; TAP: if(stack_mod_2 == mod_pressed)\n", mod_held, stack_mod_1, stack_mod_2, mod_pressed);
+                } else {
+                    // if a non-mod was pressed (ie mod-tap) ||
+                    //  or if mod 1 was pressed a second time ||
+                    //  or if a 3rd new mod was pressed,
+                    // then restart stacking in slot 1:
+                    stack_mod_1 = mod_pressed; // in case of mod-tap, mod_pressed == 0, which ie. clears the entire stack;
+                    stack_mod_2 = 0;
+                    printf("MOD_STACK >>> mod_held: %i; stack_mod_1: %04x; stack_mod_2: %04x; mod_pressed: %04x; TAP: else()\n", mod_held, stack_mod_1, stack_mod_2, mod_pressed);
+                }
+            } else if (record->event.pressed) {
+                // ON HOLD, register stacked mods
+                mod_held = true; // set mod_held state
+                if (timer_elapsed32(stack_mod_timer) >= STACK_MOD_TIMEOUT) {
+                    // if timed out, clear mod stack
+                    stack_mod_1 = 0;
+                    stack_mod_2 = 0;
+                }
+                if (stack_mod_1 == keycode || stack_mod_2 == keycode) {
+                    // if held key == stacked key, clear stack;
+                    stack_mod_1 = 0;
+                    stack_mod_2 = 0;
+                }
+                if (stack_mod_1) register_mods(stack_mod_1);
+                if (stack_mod_2) register_mods(stack_mod_2);
+                // held mod will be returned in MACRO switch statement below
+            } else {
+                // ON RELEASE, unregister mods and clear stack:
+                if (mod_held) {
+                    // after hold, clear mod stack
+                    mod_held = false; // reset mod_held state
+                    if (stack_mod_1) unregister_mods(stack_mod_1);
+                    if (stack_mod_2) unregister_mods(stack_mod_2);
+                    stack_mod_1 = 0;
+                    stack_mod_2 = 0;
+                }                                 // else, after tap, ignore release
+                stack_mod_timer = timer_read32(); // reset timer
+            }
+            break; // keycodes are not returned here, but in MACRO switch statement below
         // on non-modifier keypress:
         default:
             if (record->event.pressed && !mod_held) {
-                // if non-mod is pressed, and no mods are being held:
-                //  cancel one-shot behavior
-                clear_oneshot_mods();
-            } // else, don't cancel one-shot behavior
-            break;
-
-    } //..switch(keycode) oneshot-ish-mods
-
-    // HOLD-FAIL-RELEASE:
-    switch /* !! PUT NO MACROS IN THIS SWITCH !! */ (keycode) {
-            // clang-format off
-        /* On HOLD-FAIL-RELEASE execute TAP instead. (applies to tap-hold keys only)
-         * Example:
-         *  HOLD down LT(layer,tapcode) to activate layer
-         *  FAIL to press any key on layer
-         *  RELEASE the LT key, now tapcode is executed instead. (usually, no keycode would be executed at all)
-         */
-
-        // on listed TAP-HOLD keys:
-        case SPCLSFT: case SPCRSFT: case UNDLSFT:
-        case ADK_A:   case ADK_E:   case ADK_U:
-        case ADK_I:   case ADK_O:   case ADK_N: // clang-format on
-            if (record->event.pressed && !record->tap.count) {
-                // ON HOLD:
-                hold_active = true;
-            } else if (record->event.pressed) {
-                // ON TAP:
-                if (hold_active) { // condition necessary to allow nested HOLD-FAIL-RELEASE sequences
-                    hold_active = false;
-                }
-            } else {
-                // ON RELEASE:
-                if (hold_active) {
-                    tap_code16(keycode);
-                    hold_active = false;
-                }
+                // Clear stack on normal keypress if no mod was held
+                stack_mod_1 = 0;
+                stack_mod_2 = 0;
             }
             break;
-        // on NON-TAP-HOLD keys:
-        default:
-            if (record->event.pressed && hold_active) {
-                hold_active = false;
-            }
-            break;
-    } // ..switch(keycode) lt keys
+    } //..switch(keycode) stack-mods
 
     // MACROS:
-    switch (keycode) {
+    switch /*MACROS*/ (keycode) {
         case CLEARKB: // clear keyboard
             if (record->event.pressed) {
                 clear_keyboard(); // clears all keys and modifiers that might be stuck
                 layer_clear();    // clears all layers that might be stuck
             }
             return false;
-        case EE_BOOT: // clear eeprom and boot
-            if (record->event.pressed) {
-                eeconfig_init();  // clear eeprom
-                wait_ms(10);      // wait 10 ms
-                reset_keyboard(); // enter bootmode
-            }
-            return false;
 
         // Mods:
-        case OSMLALT:
+        case SM_LALT:
             if (record->event.pressed && record->tap.count) {
                 // ON TAP:
                 set_oneshot_mods(MOD_BIT(KC_LALT));
@@ -492,10 +533,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // special keycodes:
         case DOTCOMM:
             if (record->event.pressed && record->tap.count == 2) { // invert DOTCOMM state on double tap
-                dotcomm_state = !dotcomm_state;                    // invert state
-                tap_code16(KC_BSPC);                               // remove character output from first tap
-            } else if (record->event.pressed && dotcomm_state) {   // when state is true
-                if (mod_shift) {                                   // send comm when shifted
+                // on double tap, invert state & correct character from previous tap
+                dotcomm_state = !dotcomm_state;
+                tap_code16(KC_BSPC);
+                if (dotcomm_state) {
+                    tap_code16(KC_DOT);
+                } else {
+                    tap_code16(KC_COMM);
+                }
+            } else if (record->event.pressed && dotcomm_state) { // when state is true
+                if (mod_shift) {                                 // send comm when shifted
                     unregister_mods(mod_shift);
                     tap_code16(KC_COMM);
                     register_mods(mod_shift);
@@ -514,34 +561,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
             // clang-format off
 
-        // Auto-Dead-Keys:
-        //  requires "English(NL)" or "Nederlands" language setting + "US International" keyboard setting in Windows.
-        case ADK_A: case ADK_E: case ADK_U:
-        case ADK_I: case ADK_O: case ADK_N: // clang-format on
+        /* Diacritic keys:
+         * Diacritics (ãàáäâ) can be typed by holding a DC_key, and then tapping a dead key (ie ' " ` ~ ^)
+         * If no DC_key was held, dead keys are automatically followed by a space, so they no longer behave as "dead".
+         * This allows for example to type quotes without the extra space, so the typing flow doesn't get interrupted;
+         *  but still allows to type diacritics easily
+         */
+        case DC_A: case DC_E: case DC_U:
+        case DC_I: case DC_O: case DC_N: // clang-format on
             if (record->event.pressed && record->tap.count) {
                 // ON TAP:
-                if (mutifunc_index == -1 || adk_record == KC_SPC) { // check for multifunc keycode and adk state to avoid conflict with multifunc keycodes
+                if (mutifunc_index == -1 || !dc_pending) { // check for multifunc keycode and DC_ state to avoid conflict with multifunc keycodes
                     return true;
-                }
+                } // else return keycode as per default case below
             } else if (record->event.pressed) {
                 // ON HOLD:
-                // adk_active = true;    // update auto_dead_key active status
-                adk_record = keycode; // store keycode in auto_dead_key record
+                dc_pending = true;    // track status of DC_-key
+                dc_record  = keycode; // store record of DC_-key
                 if (is_caps_word_on()) {
-                    adk_mod_shift = MOD_MASK_SHIFT; // store shift state of auto_dead_key
+                    dc_mod_shift = MOD_MASK_SHIFT; // store shift state of DC_-key
                 } else {
-                    adk_mod_shift = mod_shift; // store shift state of auto_dead_key
+                    dc_mod_shift = mod_shift; // store shift state of DC_-key
                 }
                 return false; // don't return keycode
             } else {
                 // ON RELEASE:
-                /*if (adk_active) {
-                    // if adk still active on key release, that means adk-macro wasn't executed
-                    // in which case execute TAP action instead:
-                    tap_code16(keycode); // TAP action
-                    adk_active = false;  // update auto_dead_key active status
-                }*/
-                adk_record = KC_SPC; // reset auto_dead_key record
+                if (dc_pending) {
+                    // Diacritic key failure mode: no key was pressed while DC_ was held
+                    tap_code16(keycode);
+                }
+                dc_pending = false;
+                dc_record  = KC_SPC; // if no DC_-key was pressed, a space is sent automatically after a dead key.
                 return true;
             }
         case KC_QUOT:
@@ -551,29 +601,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed && mutifunc_index == -1) { // check for multifunc keycode to avoid conflict
                 tap_code16(keycode);                             // tap dead key
                 unregister_mods(mod_shift);                      // unregister shift (if it was pressed)
-                register_mods(adk_mod_shift);                    // register auto_dead_key shift state
-                tap_code16(adk_record);                          // tap auto_dead_key (KC_SPC if no ADK_ keycode was held)
-                unregister_mods(adk_mod_shift);                  // unregister auto_dead_key shift state
+                register_mods(dc_mod_shift);                     // register stored DC_key shift state
+                tap_code16(dc_record);                           // tap diacritic key (KC_SPC if no DC_ keycode was held)
+                unregister_mods(dc_mod_shift);                   // unregister stored DC_key shift state
                 register_mods(mod_shift);                        // re-register shift (if it was pressed)
-                // adk_active = false;                              // update auto_dead_key active status
-                hold_active = false;
-                return false; // ignore default key behavior
-            }
+                dc_pending = false;                              // reset DC_key state
+                return false;
+            } // else process keycode as per default case below;
 
         default:
             if (mutifunc_index != -1) {
                 // if multifunc key was pressed:
-                if (record->event.pressed && adk_record != KC_SPC) {
-                    // if auto_dead_key is active:
+                if (record->event.pressed && dc_pending) {
+                    // if diacritic key is active:
                     unregister_mods(mod_shift);                           // unregister shift (if it was pressed)
                     tap_code16(multifunc_map[mutifunc_index].kc_deadkey); // tap dead key
-                    register_mods(adk_mod_shift);                         // register auto_dead_keyb shift state
-                    tap_code16(adk_record);                               // tap auto_dead_key (KC_SPC if no ADK_ keycode w
-                    unregister_mods(adk_mod_shift);                       // unregister auto_dead_key shift state
+                    register_mods(dc_mod_shift);                          // register stored DC_key shift state
+                    tap_code16(dc_record);                                // tap diacritic key (KC_SPC if no DC_ keycode w
+                    unregister_mods(dc_mod_shift);                        // unregister stored DC_key shift state
                     register_mods(mod_shift);                             // re-register shift (if it was pressed)
-                    // adk_active = false;                                   // update auto_dead_key active status
-                    hold_active = false;
-                    return false; // ignore default key behaviour
+                    dc_pending = false;                                   // reset DC_key state
+                    return false;
                 } else if (record->event.pressed && mod_shift) {
                     // if shift is pressed:
                     unregister_mods(mod_shift);                           // unregister shift
@@ -583,10 +631,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }                                                         // else:
                 return true;                                              // return default keycode
 
-            } //..if(mutifunc_index != -1)
+            } else {
+                if (dc_pending) {
+                    // Diacritic key failure mode: non-deadkey was pressed while DC_ was held
+                    tap_code16(dc_record);
+                    dc_pending = false;
+                    dc_record  = KC_SPC;
+                }
+                return true;
+            }
 
-    } //..switch(keycode) macros
+    } //..switch macros
 
-    return true; // if key is not in multifunc map or other macro, return normal key behaviour
-};
-///..Macros
+    return true; // if not covered by any of the cases above, return true;
+};               //..process_record_user

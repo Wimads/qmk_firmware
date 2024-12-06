@@ -2,8 +2,8 @@
 COMB(QTY_START,     KC_NO,          KC_NO, KC_NO)
 
 ////BASIC COMBOS////
-COMB(QTY_ESC,       KC_ESC,         KC_W,    ADK_E,   KC_R) //WER Escape
-COMB(QTYrESC,       KC_ESC,         ADK_O,   ADK_I,   ADK_U) //UIO Escape
+COMB(QTY_ESC,       KC_ESC,         KC_W,    DC_E,    KC_R) //WER Escape
+COMB(QTYrESC,       KC_ESC,         DC_O,    DC_I,    DC_U)  //UIO Escape
 COMB(QTY_TAB,       KC_TAB,         KC_S,    KC_D,    FFF_NUM) //SDF Tab
 COMB(QTYrTAB,       KC_TAB,         JJJ_NUM, KC_K,    KC_L) //JKL Tab
 COMB(QTY_ENT,       KC_ENT,         KC_X,    KC_C,    KC_V)   //XCV Enter
@@ -11,28 +11,28 @@ COMB(QTYrENT,       KC_ENT,         KC_M,    KC_COMM, KC_DOT) //M,. Enter
 COMB(QTY_BSP,       KC_BSPC,        FFF_NUM, KC_G)
 COMB(QTYrBSP,       KC_BSPC,        JJJ_NUM, KC_H)
 COMB(QTY_DEL,       KC_DEL,         KC_V,    KC_B)
-COMB(QTYrDEL,       KC_DEL,         KC_M,    ADK_N)
+COMB(QTYrDEL,       KC_DEL,         KC_M,    DC_N)
 
 COMB(QTY_CWTG,      CW_TOGG,        KC_C,    KC_Z)
-COMB(QTY_CAPS,      KC_CAPS,        KC_Q,    ADK_E)
+COMB(QTY_CAPS,      KC_CAPS,        KC_Q,    DC_E)
 
 ////LAYER TOGGLES////
-COMB(QTY_CAD,       CADTOGG,        ADK_A,   KC_G)
+COMB(QTY_CAD,       CADTOGG,        DC_A,    KC_G)
 COMB(QTYrCAD,       CADTOGG,        KC_H,    KC_QUOT)
 COMB(NUM_CAD,       CADTOGG,        KC_PLUS, KC_MINS)
 COMB(QTY_QTYe,      QTYTOGG,        KC_Z,    KC_B)
 
-COMB(QTY_RNUM,      RNUMTOG,        ADK_A,   FFF_NUM)
+COMB(QTY_RNUM,      RNUMTOG,        DC_A,    FFF_NUM)
 COMB(QTYrRNUM,      RNUMTOG,        KC_QUOT, JJJ_NUM)
 COMB(NUMrRNUM,      RNUMTOG,        KC_4,    KC_MINS)
 
 ////NAVIGATION////
 COMB(QTY_HOME,      KC_HOME,        KC_W,    KC_S)
-COMB(QTYrHOME,      KC_HOME,        JJJ_NUM, ADK_U)
-COMB(QTY_UP,        KC_UP,          KC_D,    ADK_E)
-COMB(QTYrUP,        KC_UP,          KC_K,    ADK_I)
+COMB(QTYrHOME,      KC_HOME,        JJJ_NUM, DC_U)
+COMB(QTY_UP,        KC_UP,          KC_D,    DC_E)
+COMB(QTYrUP,        KC_UP,          KC_K,    DC_I)
 COMB(QTY_END,       KC_END,         FFF_NUM, KC_R)
-COMB(QTYrEND,       KC_END,         KC_L,    ADK_O)
+COMB(QTYrEND,       KC_END,         KC_L,    DC_O)
 COMB(QTY_LEFT,      KC_LEFT,        KC_S,    KC_X)
 COMB(QTYrLEFT,      KC_LEFT,        JJJ_NUM, KC_M)
 COMB(QTY_DOWN,      KC_DOWN,        KC_D,    KC_C)
@@ -49,18 +49,18 @@ COMB(QTY_BTN5,      KC_BTN5,        KC_S,    KC_V)
 COMB(QTY_mF5,       KC_F5,          KC_W,    KC_V)
 
 ////FN KEYS////
-COMB(QTY_F1,        KC_F1,          OSMLALT, KC_X)
-COMB(QTY_F2,        KC_F2,          OSMLALT, KC_C)
-COMB(QTY_F3,        KC_F3,          OSMLALT, KC_V)
-COMB(QTY_F4,        KC_F4,          OSMLALT, KC_S)
-COMB(QTY_F5,        KC_F5,          OSMLALT, KC_D)
-COMB(QTY_F6,        KC_F6,          OSMLALT, FFF_NUM)
-COMB(QTY_F7,        KC_F7,          OSMLALT, KC_W)
-COMB(QTY_F8,        KC_F8,          OSMLALT, ADK_E)
-COMB(QTY_F9,        KC_F9,          OSMLALT, KC_R)
-COMB(QTY_F10,       KC_F10,         OSMLALT, KC_X, KC_V)
-COMB(QTY_F11,       KC_F11,         OSMLALT, KC_X, KC_C)
-COMB(QTY_F12,       KC_F12,         OSMLALT, KC_C, KC_V)
+COMB(QTY_F1,        KC_F1,          SM_LALT, KC_X)
+COMB(QTY_F2,        KC_F2,          SM_LALT, KC_C)
+COMB(QTY_F3,        KC_F3,          SM_LALT, KC_V)
+COMB(QTY_F4,        KC_F4,          SM_LALT, KC_S)
+COMB(QTY_F5,        KC_F5,          SM_LALT, KC_D)
+COMB(QTY_F6,        KC_F6,          SM_LALT, FFF_NUM)
+COMB(QTY_F7,        KC_F7,          SM_LALT, KC_W)
+COMB(QTY_F8,        KC_F8,          SM_LALT, DC_E)
+COMB(QTY_F9,        KC_F9,          SM_LALT, KC_R)
+COMB(QTY_F10,       KC_F10,         SM_LALT, KC_X, KC_V)
+COMB(QTY_F11,       KC_F11,         SM_LALT, KC_X, KC_C)
+COMB(QTY_F12,       KC_F12,         SM_LALT, KC_C, KC_V)
 
 COMB(QTYrF1,        KC_F1,          MO(_MISC), KC_M)
 COMB(QTYrF2,        KC_F2,          MO(_MISC), KC_COMM)
@@ -68,9 +68,9 @@ COMB(QTYrF3,        KC_F3,          MO(_MISC), KC_DOT)
 COMB(QTYrF4,        KC_F4,          MO(_MISC), JJJ_NUM)
 COMB(QTYrF5,        KC_F5,          MO(_MISC), KC_K)
 COMB(QTYrF6,        KC_F6,          MO(_MISC), KC_L)
-COMB(QTYrF7,        KC_F7,          MO(_MISC), ADK_U)
-COMB(QTYrF8,        KC_F8,          MO(_MISC), ADK_I)
-COMB(QTYrF9,        KC_F9,          MO(_MISC), ADK_O)
+COMB(QTYrF7,        KC_F7,          MO(_MISC), DC_U)
+COMB(QTYrF8,        KC_F8,          MO(_MISC), DC_I)
+COMB(QTYrF9,        KC_F9,          MO(_MISC), DC_O)
 COMB(QTYrF10,       KC_F10,         MO(_MISC), KC_M,    KC_DOT)
 COMB(QTYrF11,       KC_F11,         MO(_MISC), KC_M,    KC_COMM)
 COMB(QTYrF12,       KC_F12,         MO(_MISC), KC_COMM, KC_DOT)
@@ -78,7 +78,7 @@ COMB(QTYrF12,       KC_F12,         MO(_MISC), KC_COMM, KC_DOT)
 ////RESET////
 COMB(QTY_CKB,       CLEARKB,        KC_Q,    KC_T)    //QT Clear keyboard
 COMB(QTYrCKB,       CLEARKB,        KC_Y,    KC_P)    //YP Clear keyboard
-COMB(QTY_RST,       EE_BOOT,        KC_R, KC_S, ADK_E, KC_T) //RSET Reset (clear eerpom, then boot mode)
+COMB(QTY_RST,       QK_BOOT,        KC_R, KC_S, DC_E,  KC_T) //RSET Reset
 
 ////FINAL marker QTY combos////
 COMB(QTY_FINAL,     KC_NO,          KC_NO, KC_NO)
